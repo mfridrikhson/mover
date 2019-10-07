@@ -12,7 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^8.0.1",
-    "koa": "^2.8.2"
+    "knex": "^0.19.5",
+    "koa": "^2.8.2",
+    "pg": "^7.12.1"
   },
   "devDependencies": {
     "dotenv": "^8.1.0",
