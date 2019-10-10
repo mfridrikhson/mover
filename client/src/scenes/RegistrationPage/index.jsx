@@ -30,7 +30,7 @@ const RegistrationPage = ({ history }) => {
   const onFormSubmit = (values, { setSubmitting }) => {
     setSubmitting(true);
 
-    register(values).then(token => {
+    register(values).then(({ token }) => {
       localStorage.setItem('token', token);
       history.push('/moving');
     });
