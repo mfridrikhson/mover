@@ -84,3 +84,6 @@ package-lock.json
 
 # test
 test/
+
+#eslint ignore
+.eslintignore

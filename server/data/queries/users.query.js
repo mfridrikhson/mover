@@ -1,33 +1,34 @@
 const knex = require('../db/connection');
 
-const getAll = async () => {
+const getAll = () => {
   return knex('users')
     .select('*');
 };
 
-const getById = async (id) => {
+const getById = id => {
   return knex('users')
     .select('*')
-    .where({ id: id });
+    .where({id})
+    .first();
 };
 
-const add = async (user) =>{
+const add = user =>{
   return knex('users')
     .insert(user)
     .returning('*');
 };
 
-const deleteById = async (id) => {
+const deleteById = id => {
   return knex('users')
     .del()
-    .where({ id: id})
+    .where({id})
     .returning('*');
 };
 
-const updateById = async (id, user) => {
+const updateById = (id, user) => {
   return knex('users')
     .update(user)
-    .where({ id : id})
+    .where({id})
     .returning('*');
 };
 
