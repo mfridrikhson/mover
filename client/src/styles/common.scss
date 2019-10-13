@@ -15,3 +15,19 @@ code {
 #root {
   height: 100%;
 }
+
+.loginRegisterFormContainer {
+  width: 30em;
+  padding: 1em 2em 1.2em 2em;
+  border-radius: 5px;
+  background-color: white;
+
+  :global(.ui.label) {
+    display: block;
+    width: max-content;
+  }
+
+  @media screen and (max-width: 540px) {
+    width: 100%;
+  }
+}

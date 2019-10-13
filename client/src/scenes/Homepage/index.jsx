@@ -9,6 +9,7 @@ import styles from './styles.module.scss';
 
 const Homepage = ({ history }) => {
   const redirectToRegister = () => history.push('/register');
+  const redirectToLogin = () => history.push('/login');
 
   return (
     <CenteringContainer>
@@ -18,7 +19,7 @@ const Homepage = ({ history }) => {
         <h3>Application for convenient transportation</h3>
         <Divider/>
         <div className={styles.buttonRow}>
-          <Button size="huge" primary>Log In</Button>
+          <Button size="huge" primary onClick={redirectToLogin}>Log In</Button>
           <Button size="huge" secondary onClick={redirectToRegister}>Sign Up</Button>
         </div>
       </div>
