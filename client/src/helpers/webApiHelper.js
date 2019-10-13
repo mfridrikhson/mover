@@ -11,7 +11,7 @@ function getFetchArgs(args) {
 
   const token = localStorage.getItem('token');
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
   let body;

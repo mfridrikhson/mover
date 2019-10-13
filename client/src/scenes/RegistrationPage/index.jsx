@@ -6,9 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Form } from 'semantic-ui-react';
 
 import CenteringContainer from '../../components/CenteringContainer';
-import { register } from '../../services/registrationService';
-
-import styles from './styles.module.scss';
+import { register } from '../../services/authService';
 
 const validationSchema = yup.object().shape({
   email: yup.string()
@@ -38,7 +36,7 @@ const RegistrationPage = ({ history }) => {
 
   return (
     <CenteringContainer>
-      <div className={styles.registerFormContainer}>
+      <div className="loginRegisterFormContainer">
         <h1>Sign Up</h1>
         <Formik
           initialValues={{
