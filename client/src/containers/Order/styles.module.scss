@@ -1,0 +1,13 @@
+:local(.orderContainer) {
+  position: absolute;
+  top: 1.5em;
+  left: 1.5em;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #a8a8a8;
+  background-color: white;
+  z-index: 100;
+
+  :global(.ui.form) {
+    padding: 1em;
+  }
+}

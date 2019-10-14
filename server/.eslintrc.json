@@ -17,7 +17,7 @@
 		"no-else-return": "error",
 		"no-useless-constructor": "error",
     "no-console": ["error", { "allow": ["warn", "error"] }],
-		"indent": ["error", 2],
+		"indent": ["error", 2, { "SwitchCase": 1 }],
 		"quotes": ["error", "single"],
     "require-atomic-updates": "off"
 	}
