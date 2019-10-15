@@ -12,7 +12,14 @@ const getById = id => {
     .first();
 };
 
-const add = user =>{
+const getByEmail = email => {
+  return knex('users')
+    .select('*')
+    .where({email})
+    .first();
+};
+
+const add = user => {
   return knex('users')
     .insert(user)
     .returning('*');
@@ -35,6 +42,7 @@ const updateById = (id, user) => {
 module.exports = {
   getAll,
   getById,
+  getByEmail,
   add,
   deleteById,
   updateById
