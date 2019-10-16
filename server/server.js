@@ -1,13 +1,20 @@
+require('./config/passport.config');
+require('dotenv').config();
 const Koa = require('koa');
 const app = new Koa();
 const bodyparser = require('koa-bodyparser');
+const passport = require('koa-passport');
+
+const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
+const routesWhiteList = require('./config/routes-white-list.config');
 
 const setupRoutesForApp = require('./api/routes');
-
-require('dotenv').config();
-
 app.use(bodyparser());
+
+app.use(passport.initialize());
+app.use(authorizationMiddleware(routesWhiteList));
 setupRoutesForApp(app);
+
 
 const server = app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
