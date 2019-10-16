@@ -19,12 +19,12 @@ router.post('/login', authenticationMiddleware, async (ctx) => {
   } catch (err) {
     console.log(err);
   }
-
 });
 
-router.post('/register', registrationMiddleware,  async (ctx) => {
+router.post('/register', registrationMiddleware, async (ctx)=>{
   try {
-    ctx.body = await register(ctx.request.body);
+    ctx.body = await register(ctx.user);
+    ctx.status = 201;
   } catch(err) {
     console.log(err);
   }

@@ -28,18 +28,18 @@ passport.use(
   'register',
   new LocalStrategy(
     {
+      usernameField: 'email',
       passReqToCallback: true
     },
-    async (user, done) => {
-      console.log(user);
+    async (request, email, password, done) => {
       try {
-        console.log(user);
-        const userByEmail = getByEmail(user.email);
+        const userByEmail = await getByEmail(email);
         if (userByEmail) return done({status: 401, message: 'User with such email exists'}, false);
-
         return done(null, {
-          email: user.email,
-          password: await cryptoHelper.encrypt(user.password)
+          email: email,
+          password: await cryptoHelper.encrypt(password),
+          firstName: request.body.firstName,
+          lastName: request.body.lastName
         });
       } catch (err) {
         return done(err);

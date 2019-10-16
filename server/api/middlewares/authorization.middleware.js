@@ -1,10 +1,10 @@
 const jwtMiddleware = require('./jwt.middleware');
 
 
-const authorizationMiddleware = (routesWhiteList) => (ctx, next) => {
+const authorizationMiddleware = (routesWhiteList) => async (ctx, next) => {
   routesWhiteList.some(route => route === ctx.request.path)
-    ? next()
-    : jwtMiddleware(ctx, next);
+    ? await next()
+    : await jwtMiddleware(ctx, next);
 };
 
 module.exports = authorizationMiddleware;

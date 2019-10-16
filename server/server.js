@@ -10,11 +10,7 @@ const routesWhiteList = require('./config/routes-white-list.config');
 
 const setupRoutesForApp = require('./api/routes');
 app.use(bodyparser());
-/*app.use(async (ctx, next) => {
-  await next();
-  console.log(ctx.request);
-  console.log(ctx.response);
-});*/
+
 app.use(passport.initialize());
 app.use(authorizationMiddleware(routesWhiteList));
 setupRoutesForApp(app);
