@@ -21,7 +21,7 @@ router.post('/login', authenticationMiddleware, async (ctx) => {
   }
 });
 
-router.post('/register', registrationMiddleware, async (ctx)=>{
+router.post('/register', registrationMiddleware, async (ctx)=> {
   try {
     ctx.body = await register(ctx.user);
     ctx.status = 201;

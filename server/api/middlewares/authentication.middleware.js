@@ -9,4 +9,4 @@ module.exports = (ctx, next) =>
       ctx.user = user;
       await next();
     }
-  },{ session: false })(ctx);
+  } , { session: false })(ctx);

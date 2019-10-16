@@ -1,8 +1,8 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
-const {getByEmail, getById} = require('../data/queries/users.query');
-const {jwtOptions} = require('../config/jwt.config');
+const { getByEmail, getById } = require('../data/queries/users.query');
+const { jwtOptions } = require('../config/jwt.config');
 const cryptoHelper = require('../helpers/crypto.helper');
 
 
@@ -17,7 +17,7 @@ passport.use(
 
       return await cryptoHelper.compare(password, user.password)
         ? done(null, user)
-        : done({ status: 401, message: 'Passwords do not match.' }, null, false);
+        : done({ status: 401, message: 'Passwords do not match.' }, false);
     } catch (err) {
       return done(err);
     }
@@ -34,7 +34,9 @@ passport.use(
     async (request, email, password, done) => {
       try {
         const userByEmail = await getByEmail(email);
-        if (userByEmail) return done({status: 401, message: 'User with such email exists'}, false);
+        if (userByEmail) {
+          return done({status: 401, message: 'User with such email exists'}, false);
+        }
         return done(null, {
           email: email,
           password: await cryptoHelper.encrypt(password),
@@ -47,14 +49,6 @@ passport.use(
     }
   )
 );
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
 
 passport.use(
   new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
