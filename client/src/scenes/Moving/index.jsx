@@ -6,7 +6,7 @@ const Moving = () => {
   return (
     <>
       <Order/>
-      {/*<Map/>*/}
+      <Map/>
     </>
   );
 };

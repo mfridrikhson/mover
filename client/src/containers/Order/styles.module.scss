@@ -10,4 +10,8 @@
   :global(.ui.form) {
     padding: 1em;
   }
+
+  :global(.ui.primary.button) {
+    margin-right: 0;
+  }
 }

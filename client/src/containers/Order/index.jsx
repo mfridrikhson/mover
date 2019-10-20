@@ -6,11 +6,13 @@ import TransportTypeForm from '../../components/TransportTypeForm';
 import RoutePointsForm from '../../components/RoutePointsForm';
 
 import styles from './styles.module.scss';
+import ConfirmOrder from '../../components/ConfirmOrder';
 
 const orderSteps = {
   cargoParams: 0,
   transportType: 1,
-  routePoints: 2
+  routePoints: 2,
+  confirmation: 3
 };
 
 class Order extends React.Component {
@@ -33,7 +35,7 @@ class Order extends React.Component {
 
   onContinue = values => this.setState(({ step }) => ({ step: step + 1, ...values }));
 
-  onSubmit = values => null;
+  onSubmit = () => null;
 
   getStepComponent = step => {
     const {
@@ -64,6 +66,16 @@ class Order extends React.Component {
           onBack={this.onBack}
           onContinue={this.onContinue}
         />;
+      case orderSteps.confirmation:
+        return <ConfirmOrder
+          volumeWeight={volumeWeight}
+          cargoType={cargoType}
+          transportType={transportType}
+          addressFrom={pointFrom.address}
+          addressTo={pointTo.address}
+          onBack={this.onBack}
+          onConfirm={this.onSubmit}
+        />;
       default:
         return <CargoParamsForm
           volumeWeight={volumeWeight}
@@ -81,45 +93,47 @@ class Order extends React.Component {
       <div className={styles.orderContainer}>
         <Header as="h2" attached="top">Your Order</Header>
         {stepComponent}
-        <Step.Group attached="bottom" size="mini">
-          <Step
-            link
-            active={step === orderSteps.cargoParams}
-            onClick={() => this.goToStep(orderSteps.cargoParams)}
-          >
-            <Icon name="boxes" />
-            <Step.Content>
-              <Step.Title>Cargo info</Step.Title>
-              <Step.Description>Enter cargo parameters</Step.Description>
-            </Step.Content>
-          </Step>
+        {step !== orderSteps.confirmation && (
+          <Step.Group attached="bottom" size="mini">
+            <Step
+              link
+              active={step === orderSteps.cargoParams}
+              onClick={() => this.goToStep(orderSteps.cargoParams)}
+            >
+              <Icon name="boxes" />
+              <Step.Content>
+                <Step.Title>Cargo info</Step.Title>
+                <Step.Description>Enter cargo parameters</Step.Description>
+              </Step.Content>
+            </Step>
 
-          <Step
-            link
-            disabled={!volumeWeight}
-            active={step === orderSteps.transportType}
-            onClick={() => this.goToStep(orderSteps.transportType)}
-          >
-            <Icon name="truck" />
-            <Step.Content>
-              <Step.Title>Transport</Step.Title>
-              <Step.Description>Choose truck type</Step.Description>
-            </Step.Content>
-          </Step>
+            <Step
+              link
+              disabled={!volumeWeight}
+              active={step === orderSteps.transportType}
+              onClick={() => this.goToStep(orderSteps.transportType)}
+            >
+              <Icon name="truck" />
+              <Step.Content>
+                <Step.Title>Transport</Step.Title>
+                <Step.Description>Choose truck type</Step.Description>
+              </Step.Content>
+            </Step>
 
-          <Step
-            link
-            disabled={!volumeWeight || !transportType}
-            active={step === orderSteps.routePoints}
-            onClick={() => this.goToStep(orderSteps.routePoints)}
-          >
-            <Icon name="map marker alternate" />
-            <Step.Content>
-              <Step.Title>Route points</Step.Title>
-              <Step.Description>Select route points</Step.Description>
-            </Step.Content>
-          </Step>
-        </Step.Group>
+            <Step
+              link
+              disabled={!volumeWeight || !transportType}
+              active={step === orderSteps.routePoints}
+              onClick={() => this.goToStep(orderSteps.routePoints)}
+            >
+              <Icon name="map marker alternate" />
+              <Step.Content>
+                <Step.Title>Route points</Step.Title>
+                <Step.Description>Select route points</Step.Description>
+              </Step.Content>
+            </Step>
+          </Step.Group>
+        )}
       </div>
     );
   }
