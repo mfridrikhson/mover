@@ -1,0 +1,13 @@
+:local(.cargoParamsFormContainer) {
+  :global(.inline.field) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  :global(.ui.button.primary) {
+    display: block;
+    margin-left: auto;
+  }
+}

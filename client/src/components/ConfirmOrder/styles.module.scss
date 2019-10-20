@@ -1,0 +1,7 @@
+:local(.confirmOrderContainer) {
+  padding: 1em;
+
+  :global(.ui.button.primary) {
+    float: right;
+  }
+}
