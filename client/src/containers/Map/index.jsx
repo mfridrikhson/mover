@@ -10,7 +10,7 @@ const geolocateStyle = {
   bottom: '9em'
 };
 
-class Moving extends React.Component {
+class Map extends React.Component {
   constructor(props) {
     super(props);
 
@@ -23,6 +23,8 @@ class Moving extends React.Component {
         zoom: 8
       }
     };
+
+    this.mapRef = React.createRef();
   }
 
   onViewportChange = viewport => this.setState({ viewport });
@@ -32,6 +34,7 @@ class Moving extends React.Component {
     return (
       <MapBox
         {...this.state.viewport}
+        ref={this.mapRef}
         onViewportChange={this.onViewportChange}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         mapStyle={mapStyleUrl}
@@ -51,4 +54,4 @@ class Moving extends React.Component {
   }
 }
 
-export default Moving;
+export default Map;

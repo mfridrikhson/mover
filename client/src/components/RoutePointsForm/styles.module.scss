@@ -1,13 +1,16 @@
-:local(.cargoParamsFormContainer) {
+:local(.routePointsFormContainer) {
   :global(.inline.field) {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+
+    :global(.ui.search.selection.dropdown) {
+      flex-grow: 1;
+    }
   }
 
   :global(.ui.button.primary) {
-    display: block;
-    margin-left: auto;
+    float: right;
   }
 }

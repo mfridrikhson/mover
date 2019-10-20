@@ -3,13 +3,14 @@ import { Header, Icon, Step } from 'semantic-ui-react';
 
 import CargoParamsForm from '../../components/CargoParamsForm';
 import TransportTypeForm from '../../components/TransportTypeForm';
+import RoutePointsForm from '../../components/RoutePointsForm';
 
 import styles from './styles.module.scss';
 
 const orderSteps = {
   cargoParams: 0,
   transportType: 1,
-  confirm: 2
+  routePoints: 2
 };
 
 class Order extends React.Component {
@@ -20,7 +21,9 @@ class Order extends React.Component {
       step: orderSteps.cargoParams,
       volumeWeight: '',
       cargoType: '',
-      transportType: ''
+      transportType: '',
+      pointFrom: undefined,
+      pointTo: undefined
     };
   }
 
@@ -30,8 +33,16 @@ class Order extends React.Component {
 
   onContinue = values => this.setState(({ step }) => ({ step: step + 1, ...values }));
 
+  onSubmit = values => null;
+
   getStepComponent = step => {
-    const { volumeWeight, cargoType, transportType } = this.state;
+    const {
+      volumeWeight,
+      cargoType,
+      transportType,
+      pointFrom,
+      pointTo
+    } = this.state;
 
     switch (step) {
       case orderSteps.cargoParams:
@@ -43,6 +54,13 @@ class Order extends React.Component {
       case orderSteps.transportType:
         return <TransportTypeForm
           transportType={transportType}
+          onBack={this.onBack}
+          onContinue={this.onContinue}
+        />;
+      case orderSteps.routePoints:
+        return <RoutePointsForm
+          pointFrom={pointFrom}
+          pointTo={pointTo}
           onBack={this.onBack}
           onContinue={this.onContinue}
         />;
@@ -85,20 +103,20 @@ class Order extends React.Component {
             <Icon name="truck" />
             <Step.Content>
               <Step.Title>Transport</Step.Title>
-              <Step.Description>Choose truck type </Step.Description>
+              <Step.Description>Choose truck type</Step.Description>
             </Step.Content>
           </Step>
 
           <Step
             link
             disabled={!volumeWeight || !transportType}
-            active={step === orderSteps.confirm}
-            onClick={() => this.goToStep(orderSteps.confirm)}
+            active={step === orderSteps.routePoints}
+            onClick={() => this.goToStep(orderSteps.routePoints)}
           >
-            <Icon name="info" />
+            <Icon name="map marker alternate" />
             <Step.Content>
-              <Step.Title>Confirm Order</Step.Title>
-              <Step.Description>Verify order details</Step.Description>
+              <Step.Title>Route points</Step.Title>
+              <Step.Description>Select route points</Step.Description>
             </Step.Content>
           </Step>
         </Step.Group>
