@@ -14,7 +14,7 @@ const Homepage = ({ history }) => {
   return (
     <CenteringContainer>
       <div className={styles.infoContainer}>
-        <h1>Mover</h1>
+        <h1 onClick={() => history.push('/moving')}>Mover</h1>
         <Divider/>
         <h3>Application for convenient transportation</h3>
         <Divider/>
@@ -28,10 +28,8 @@ const Homepage = ({ history }) => {
 };
 
 Homepage.propTypes = {
-  history: PropTypes.exact({
-    length: PropTypes.number,
-    action: PropTypes.string,
-    location: PropTypes.object
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
   }).isRequired
 };
 

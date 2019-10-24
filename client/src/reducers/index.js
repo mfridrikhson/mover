@@ -1,11 +1,7 @@
 import { combineReducers } from 'redux';
 
-// import reducers
+import { user } from '../containers/Routing/reducer';
 
 export default combineReducers({
-  /*
-  reducerA,
-  reducerB,
-  ...
-   */
+  user
 });
