@@ -5,7 +5,7 @@ const expiresIn = '24h';
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: secret
+  secretOrKey: process.env.SECRET_KEY
 };
 
 module.exports = {

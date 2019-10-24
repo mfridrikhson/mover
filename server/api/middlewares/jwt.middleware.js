@@ -2,11 +2,14 @@ const passport = require('koa-passport');
 
 module.exports = (ctx, next) =>
   passport.authenticate('jwt', async (err, user) => {
-    if (err) {
-      ctx.status = err.status;
-      ctx.body = err.message;
+    if (err || !user) {
+      ctx.status = err ? err.status : 401;
+
+      if (err) {
+        ctx.body = err.message;
+      }
     } else {
       ctx.user = user;
-      await next();
+      return await next();
     }
   } , { session: false })(ctx);
