@@ -9,40 +9,40 @@ const {
 const getAllUsers = async () => {
   try {
     return await getAll();
-  } catch(error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
 const getUserById = async (id) => {
-  try{
+  try {
     return await getById(id);
-  } catch(error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
 const addUser = async (user) => {
-  try{
+  try {
     return await add(user);
-  } catch(error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
-const deleteUserById = async(id) =>{
-  try{
+const deleteUserById = async (id) => {
+  try {
     return await deleteById(id);
-  } catch(error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
-const updateUserByID = async(id, user) => {
-  try{
+const updateUserByID = async (id, user) => {
+  try {
     return await updateById(id, user);
-  } catch(error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
