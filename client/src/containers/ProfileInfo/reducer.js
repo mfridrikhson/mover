@@ -1,4 +1,5 @@
 import { fetchUser } from '../../routines';
+import { REGISTRATION_REQUEST, LOGIN_REQUEST } from './actionTypes';
 
 const initialState = {
   user: null,
@@ -9,6 +10,8 @@ const initialState = {
 
 export const user = (state = initialState, action) => {
   switch (action.type) {
+    case REGISTRATION_REQUEST:
+    case LOGIN_REQUEST:
     case fetchUser.TRIGGER:
       return {
         ...state,
