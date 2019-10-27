@@ -1,9 +1,6 @@
 const {
   getAll,
   getById,
-  getByDriverId,
-  getByCustomerId,
-  getByStatus,
   add,
   deleteById,
   updateById
@@ -14,11 +11,10 @@ const {
   toJson
 } = require('../../helpers/orders.helper');
 
-//TODO Add filters
 
-const getAllOrders = async () => {
+const getAllOrders = async (filters) => {
   try {
-    return await getAll().map(order => toJson(order));
+    return await getAll(filters).map(order => toJson(order));
   } catch (err) {
     throw err;
   }
@@ -27,30 +23,6 @@ const getAllOrders = async () => {
 const getOrderById = async (id) => {
   try {
     return toJson(await getById(id));
-  } catch (err) {
-    throw err;
-  }
-};
-
-const getOrdersByDriverId = async (driverId) => {
-  try {
-    return await getByDriverId(driverId).map(order => toJson(order));
-  } catch (err) {
-    throw err;
-  }
-};
-
-const getOrdersByCustomerId = async (customerId) => {
-  try {
-    return await getByCustomerId(customerId).map(order => toJson(order));
-  } catch (err) {
-    throw err;
-  }
-};
-
-const getOrdersByStatus = async (status) => {
-  try {
-    return await getByStatus(status).map(order => toJson(order));
   } catch (err) {
     throw err;
   }
@@ -83,9 +55,6 @@ const updateOrderById = async (id, order) => {
 module.exports = {
   getAllOrders,
   getOrderById,
-  getOrdersByDriverId,
-  getOrdersByCustomerId,
-  getOrdersByStatus,
   addOrder,
   deleteOrderById,
   updateOrderById

@@ -4,18 +4,13 @@ const router = new Router({ prefix: '/orders' });
 const {
   getAllOrders,
   getOrderById,
-  getOrdersByDriverId,
-  getOrdersByCustomerId,
-  getOrdersByStatus,
   addOrder,
   deleteOrderById,
   updateOrderById
 } = require('../services/orders.service');
 
-//TODO add get by filter
-
 router.get('/', async (ctx) => {
-  ctx.body = await getAllOrders();
+  ctx.body = await getAllOrders(ctx.request.query);
 });
 
 router.get('/:id', async (ctx) => {

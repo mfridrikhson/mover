@@ -1,8 +1,17 @@
 const knex = require('../db/connection');
 
-const getAll = () => {
+const getAll = ({ driverId, customerId, status }) => {
   return knex('orders')
-    .select('*');
+    .select('*')
+    .where((builder) => {
+      driverId ? builder.where({ driverId }) : null;
+    })
+    .where((builder) => {
+      customerId ? builder.where({ customerId }) : null;
+    })
+    .where((builder) => {
+      status ? builder.where({ status }) : null;
+    });
 };
 
 const getById = id => {
@@ -10,24 +19,6 @@ const getById = id => {
     .select('*')
     .where({ id })
     .first();
-};
-
-const getByDriverId = driverId => {
-  return knex('orders')
-    .select('*')
-    .where({ driverId });
-};
-
-const getByCustomerId  = customerId => {
-  return knex('orders')
-    .select('*')
-    .where({ customerId });
-};
-
-const getByStatus = status => {
-  return knex('users')
-    .select('*')
-    .where({ status });
 };
 
 const add = order => {
@@ -54,9 +45,6 @@ const updateById = (id, order) => {
 module.exports = {
   getAll,
   getById,
-  getByDriverId,
-  getByCustomerId,
-  getByStatus,
   add,
   deleteById,
   updateById
