@@ -1,7 +1,6 @@
 :local(.orderContainer) {
-  position: absolute;
-  top: 1.5em;
-  left: 1.5em;
+  float: right;
+  margin-left: 0.75em;
   border-radius: 5px;
   box-shadow: 2px 2px 10px #a8a8a8;
   background-color: white;
