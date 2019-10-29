@@ -30,7 +30,8 @@ const getOrderById = async (id) => {
 
 const addOrder = async (order) => {
   try {
-    return await add(fromJson(order));
+    const [newOrder] = await add(fromJson(order));
+    return toJson(newOrder);
   } catch (err) {
     throw err;
   }

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "lint": "eslint --fix ./**/*.js"
+    "lint": "eslint --fix ./**/*.js",
+    "migrate": "npx knex migrate:latest --env development"
   },
   "keywords": [],
   "author": "",

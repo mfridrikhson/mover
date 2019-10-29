@@ -29,7 +29,7 @@ router.get('/:id', async (ctx) => {
 
 router.post('/', async (ctx) => {
   try {
-    const [order] = await addOrder(ctx.request.body);
+    const order = await addOrder(ctx.request.body);
     if (order) {
       ctx.status = 201;
       ctx.body = order;

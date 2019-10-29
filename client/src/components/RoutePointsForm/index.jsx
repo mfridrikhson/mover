@@ -7,11 +7,11 @@ import AddressPicker from '../AddressPicker';
 
 import styles from './styles.module.scss';
 
-const RoutePointsForm = ({ pointFrom, pointTo, onBack, onContinue }) => {
-  const [addressFrom, setAddressFrom] = useState(pointFrom.address);
-  const [addressTo, setAddressTo] = useState(pointTo.address);
-  const [coordsFrom, setCoordsFrom] = useState(pointFrom.coords);
-  const [coordsTo, setCoordsTo] = useState(pointTo.coords);
+const RoutePointsForm = ({ toPoint, fromPoint, onBack, onContinue }) => {
+  const [addressFrom, setAddressFrom] = useState(toPoint.address);
+  const [addressTo, setAddressTo] = useState(fromPoint.address);
+  const [coordsFrom, setCoordsFrom] = useState(toPoint.coords);
+  const [coordsTo, setCoordsTo] = useState(fromPoint.coords);
 
   const getCoords = async address => {
     try {
@@ -23,11 +23,11 @@ const RoutePointsForm = ({ pointFrom, pointTo, onBack, onContinue }) => {
   };
 
   const handleSubmit = () => onContinue({
-    pointFrom: {
+    fromPoint: {
       address: addressFrom,
       coords: coordsFrom
     },
-    pointTo: {
+    toPoint: {
       address: addressTo,
       coords: coordsTo
     }
@@ -77,8 +77,8 @@ const routePointInterface = {
 };
 
 RoutePointsForm.propTypes = {
-  pointFrom: PropTypes.exact(routePointInterface),
-  pointTo: PropTypes.exact(routePointInterface),
+  fromPoint: PropTypes.exact(routePointInterface),
+  toPoint: PropTypes.exact(routePointInterface),
   onBack: PropTypes.func.isRequired,
   onContinue: PropTypes.func.isRequired
 };
@@ -89,8 +89,8 @@ const defaultPoint = {
 };
 
 RoutePointsForm.defaultProps = {
-  pointFrom: defaultPoint,
-  pointTo: defaultPoint
+  fromPoint: defaultPoint,
+  toPoint: defaultPoint
 };
 
 export default RoutePointsForm;
