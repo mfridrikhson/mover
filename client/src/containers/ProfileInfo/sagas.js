@@ -1,7 +1,8 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as authService from '../../services/authService';
+import * as userService from '../../services/userService';
 import { fetchUser } from '../../routines';
-import { LOGIN_REQUEST, REGISTRATION_REQUEST } from './actionTypes';
+import { LOGIN_REQUEST, REGISTRATION_REQUEST, UPDATE_USER_REQUEST } from './actionTypes';
 
 function* userRequest() {
   try {
@@ -41,6 +42,18 @@ function* loginRequest({ payload }) {
   }
 }
 
+function* updateUserRequest({ payload }) {
+  try {
+    const user = yield call(userService.updateUser, payload);
+
+    yield put(fetchUser.success(user));
+  } catch (error) {
+    yield put(fetchUser.failure(error.message));
+  } finally {
+    yield put(fetchUser.fulfill());
+  }
+}
+
 function* watchUserRequest() {
   yield takeEvery(fetchUser.TRIGGER, userRequest);
 }
@@ -53,10 +66,15 @@ function* watchLoginRequest() {
   yield takeEvery(LOGIN_REQUEST, loginRequest);
 }
 
+function* watchUpdateUserRequest() {
+  yield takeEvery(UPDATE_USER_REQUEST, updateUserRequest);
+}
+
 export default function* userSagas() {
   yield all([
     watchUserRequest(),
     watchRegistrationRequest(),
-    watchLoginRequest()
+    watchLoginRequest(),
+    watchUpdateUserRequest()
   ]);
 }

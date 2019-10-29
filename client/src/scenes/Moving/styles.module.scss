@@ -1,0 +1,16 @@
+:local(.controlsContainer) {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  z-index: 100;
+}
+
+:global(.ui.sidebar.icon.vertical.menu) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &::after {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { user } from '../containers/Routing/reducer';
+import { user } from '../containers/ProfileInfo/reducer';
 
 export default combineReducers({
   user
