@@ -8,8 +8,9 @@ const ConfirmOrder = ({
   volumeWeight,
   cargoType,
   transportType,
-  addressFrom,
-  addressTo,
+  fromAddress,
+  toAddress,
+  loading,
   onBack,
   onConfirm
 }) => {
@@ -48,7 +49,7 @@ const ConfirmOrder = ({
               Depart from
             </Table.Cell>
             <Table.Cell>
-              {addressFrom}
+              {fromAddress}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -56,23 +57,24 @@ const ConfirmOrder = ({
               Deliver to
             </Table.Cell>
             <Table.Cell>
-              {addressTo}
+              {toAddress}
             </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
       <Button onClick={onBack}>Edit</Button>
-      <Button primary onClick={onConfirm}>Confirm Order & Submit</Button>
+      <Button primary loading={loading} onClick={onConfirm}>Confirm Order & Submit</Button>
     </div>
   );
 };
 
 ConfirmOrder.propTypes = {
-  volumeWeight: PropTypes.string.isRequired,
+  volumeWeight: PropTypes.number.isRequired,
   cargoType: PropTypes.string.isRequired,
   transportType: PropTypes.string.isRequired,
-  addressFrom: PropTypes.string.isRequired,
-  addressTo: PropTypes.string.isRequired,
+  fromAddress: PropTypes.string.isRequired,
+  toAddress: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
   onBack: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired
 };

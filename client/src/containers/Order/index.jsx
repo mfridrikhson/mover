@@ -1,12 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Header, Icon, Step } from 'semantic-ui-react';
 
 import CargoParamsForm from '../../components/CargoParamsForm';
 import TransportTypeForm from '../../components/TransportTypeForm';
 import RoutePointsForm from '../../components/RoutePointsForm';
+import ConfirmOrder from '../../components/ConfirmOrder';
+import { submitOrder } from '../../routines';
 
 import styles from './styles.module.scss';
-import ConfirmOrder from '../../components/ConfirmOrder';
 
 const orderSteps = {
   cargoParams: 0,
@@ -24,8 +27,8 @@ class Order extends React.Component {
       volumeWeight: '',
       cargoType: '',
       transportType: '',
-      pointFrom: undefined,
-      pointTo: undefined
+      fromPoint: undefined,
+      toPoint: undefined
     };
   }
 
@@ -35,16 +38,37 @@ class Order extends React.Component {
 
   onContinue = values => this.setState(({ step }) => ({ step: step + 1, ...values }));
 
-  onSubmit = () => null;
+  onSubmit = () => {
+    const {
+      volumeWeight,
+      cargoType,
+      // transportType,
+      fromPoint,
+      toPoint
+    } = this.state;
+
+    this.props.submitOrder({
+      volumeWeight,
+      cargoType,
+      vehicleTypeId: '6485c25f-b245-4903-baac-27f27a0c537f',
+      vehicleId: '6485c25f-b245-4903-baac-27f27a0c537c',
+      billId: '6485c25f-b245-4903-baac-27f27a0c537e',
+      driverId: '6485c25f-b245-4903-baac-27f27a0c537a',
+      // transportType,
+      fromPoint,
+      toPoint
+    });
+  };
 
   getStepComponent = step => {
     const {
       volumeWeight,
       cargoType,
       transportType,
-      pointFrom,
-      pointTo
+      fromPoint,
+      toPoint
     } = this.state;
+    const { loading } = this.props;
 
     switch (step) {
       case orderSteps.cargoParams:
@@ -61,8 +85,8 @@ class Order extends React.Component {
         />;
       case orderSteps.routePoints:
         return <RoutePointsForm
-          pointFrom={pointFrom}
-          pointTo={pointTo}
+          fromPoint={fromPoint}
+          toPoint={toPoint}
           onBack={this.onBack}
           onContinue={this.onContinue}
         />;
@@ -71,8 +95,9 @@ class Order extends React.Component {
           volumeWeight={volumeWeight}
           cargoType={cargoType}
           transportType={transportType}
-          addressFrom={pointFrom.address}
-          addressTo={pointTo.address}
+          fromAddress={fromPoint.address}
+          toAddress={toPoint.address}
+          loading={loading}
           onBack={this.onBack}
           onConfirm={this.onSubmit}
         />;
@@ -139,4 +164,19 @@ class Order extends React.Component {
   }
 }
 
-export default Order;
+Order.propTypes = {
+  order: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  submitOrder: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ order: { order, loading } }) => ({
+  order,
+  loading
+});
+
+const mapDispatchToProps = {
+  submitOrder
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Order);
