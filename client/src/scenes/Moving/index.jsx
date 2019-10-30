@@ -3,7 +3,7 @@ import { Icon, Menu, Modal, Sidebar } from 'semantic-ui-react';
 
 import Map from '../../containers/Map';
 import Order from '../../containers/Order';
-import ProfileInfo from '../../containers/ProfileInfo';
+import ProfileInfo from '../../containers/Settings';
 
 import styles from  './styles.module.scss';
 
@@ -43,11 +43,10 @@ const Moving = () => {
           size="small"
           trigger={
             <Menu.Item link onClick={() => setSidebarOpened(false)}>
-              <Icon name="user"/>
-              Profile
+              <Icon name="cog"/>
+              Settings
             </Menu.Item>
           }>
-          <Modal.Header>Profile Information</Modal.Header>
           <Modal.Content>
             <ProfileInfo/>
           </Modal.Content>
