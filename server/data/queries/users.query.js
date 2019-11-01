@@ -8,14 +8,14 @@ const getAll = () => {
 const getById = id => {
   return knex('users')
     .select('*')
-    .where({id})
+    .where({ id })
     .first();
 };
 
 const getByEmail = email => {
   return knex('users')
     .select('*')
-    .where({email})
+    .where({ email })
     .first();
 };
 
@@ -28,14 +28,14 @@ const add = user => {
 const deleteById = id => {
   return knex('users')
     .del()
-    .where({id})
+    .where({ id })
     .returning('*');
 };
 
 const updateById = (id, user) => {
   return knex('users')
     .update(user)
-    .where({id})
+    .where({ id })
     .returning('*');
 };
 
