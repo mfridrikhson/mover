@@ -59,7 +59,7 @@ router.get('/currentVehicleId/:id', async (ctx) => {
 
 router.post('/', async (ctx) => {
   try {
-    const driver = await addDriver(ctx.request.body);
+    const [driver] = await addDriver(ctx.request.body);
     if (driver) {
       ctx.status = 201;
       ctx.body = driver;
