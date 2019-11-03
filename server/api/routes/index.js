@@ -8,6 +8,7 @@ const driversRoutes = require('./drivers.routes');
 const vehicleTypesRoutes = require('./vehicleTypes.routes');
 const vehiclesRoutes = require('./vehicles.routes');
 const billsRoutes = require('./bills.routes');
+const orderRoutesRoutes = require('./orderRoutes.routes');
 
 module.exports = app => {
   rootRouter.use(usersRoutes.routes());
@@ -17,6 +18,7 @@ module.exports = app => {
   rootRouter.use(vehicleTypesRoutes.routes());
   rootRouter.use(vehiclesRoutes.routes());
   rootRouter.use(billsRoutes.routes());
+  rootRouter.use(orderRoutesRoutes.routes());
 
   app.use(rootRouter.routes());
 };
