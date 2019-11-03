@@ -4,7 +4,6 @@ const router = new Router({ prefix: '/orderRoutes' });
 const {
   getAllOrderRoutes,
   getOrderRouteById,
-  getOrderRoutesByOrderId,
   addOrderRoute,
   deleteOrderRouteById,
   updateOrderRouteById
@@ -19,20 +18,6 @@ router.get('/:id', async (ctx) => {
     const orderRoute = await getOrderRouteById(ctx.params.id);
     if (orderRoute) {
       ctx.body = orderRoute;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
-});
-
-router.get('/order/:orderId', async (ctx) => {
-  try {
-    const orderRoutes = await getOrderRoutesByOrderId(ctx.params.orderId);
-    if (orderRoutes) {
-      ctx.body = orderRoutes;
     } else {
       ctx.status = 400;
     }
