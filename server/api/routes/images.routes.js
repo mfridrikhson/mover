@@ -1,8 +1,8 @@
 const Router = require('@koa/router');
 const router = new Router({ prefix: '/image' });
 
-import { getImageById, upload } from '../services/images.service';
-import imageMiddleware from '../middlewares/image.middleware';
+const { getImageById, upload } = require('../services/images.service');
+const imageMiddleware = require('../middlewares/image.middleware');
 
 router.get('/:id', async (ctx) => {
   try {

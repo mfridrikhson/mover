@@ -1,0 +1,13 @@
+:local(.driverInfoControls) {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+
+:local(.colorPicker) {
+  text-align: center;
+
+  :global(.sketch-picker) {
+    margin: auto;
+  }
+}

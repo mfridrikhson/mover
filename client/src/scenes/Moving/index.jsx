@@ -41,6 +41,7 @@ const Moving = () => {
       >
         <Modal
           size="small"
+          scrolling
           trigger={
             <Menu.Item link onClick={() => setSidebarOpened(false)}>
               <Icon name="cog"/>

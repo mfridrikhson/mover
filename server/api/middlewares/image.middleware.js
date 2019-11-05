@@ -1,5 +1,5 @@
-import multer from 'multer';
-import { fileSizeLimit } from '../../config/imgur.config';
+const multer = require('multer');
+const { fileSizeLimit } = require('../../config/imgur.config');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -9,4 +9,4 @@ const upload = multer({
   }
 });
 
-export default upload.single('image');
+module.exports = upload.single('image');

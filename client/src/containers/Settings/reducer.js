@@ -21,7 +21,7 @@ export const user = (state = initialState, action) => {
       return {
         ...state,
         isAuthorized: !!(action.payload && action.payload.id),
-        user: action.payload
+        user: { ...action.payload, type: 'driver' }
       };
     case fetchUser.FAILURE:
       return {
