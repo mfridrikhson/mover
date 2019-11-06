@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { SketchPicker } from 'react-color';
 import { Button, Divider, Dropdown, Form, Grid } from 'semantic-ui-react';
 
+import { uploadImage } from '../../services/imageService';
 import VehicleTypeSelect from '../VehicleTypeSelect';
 
 import styles from './styles.module.scss';
@@ -15,7 +16,7 @@ const validationSchema = yup.object().shape({
   vehicleType: yup.string().required('Vehicle type is required')
 });
 
-const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
+const DriverDetails = ({ driver, loading, onChangeVehicle, onAddVehicle }) => (
   <>
     <Grid columns={2}>
       <Grid.Row>
@@ -25,7 +26,7 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
             selection
             fluid
             onChange={onChangeVehicle}
-            options={vehicles && vehicles.map(({ id, name }) => ({ key: id, text: name, value: id }))}
+            options={driver && driver.vehicles.map(({ id, name }) => ({ key: id, text: name, value: id }))}
           />
         </Grid.Column>
         <Grid.Column>
@@ -46,7 +47,8 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
         name: '',
         registrationPlate: '',
         color: '#000000',
-        vehicleType: ''
+        vehicleType: '',
+        photo: null
       }}
       validationSchema={validationSchema}
       onSubmit={onAddVehicle}
@@ -63,6 +65,7 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
             fluid
             onChange={handleChange}
             onBlur={handleBlur}
+            disabled={loading}
             required
           />
           <Form.Input
@@ -74,10 +77,11 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
             name="registrationPlate"
             onChange={handleChange}
             onBlur={handleBlur}
+            disabled={loading}
             required
           />
           <Form.Group>
-            <div className={`${styles.colorPicker} field eight`}>
+            <div className={`${styles.colorPicker} field eight required`}>
               <label>Color</label>
               <SketchPicker
                 color={values.color}
@@ -88,18 +92,25 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
               <label>Transport type</label>
               <VehicleTypeSelect
                 value={values.vehicleType}
+                disabled={loading}
                 onChange={(event, data) => {
                   setFieldValue('vehicleType', data.value);
                 }}
               />
             </Form.Field>
-            <Form.Field>
+            <Form.Field required>
               <label>Upload Photo</label>
-              <Button
+              <Form.Input
+                type="file"
                 icon="photo"
                 content="Upload"
-                type="button"
-                primary
+                name="photo"
+                multiple
+                disabled={loading}
+                onChange={async ({ target }) => {
+                  const { link: photo } = await uploadImage(target.files[0]);
+                  setFieldValue('photo', photo);
+                }}
               />
             </Form.Field>
           </Form.Group>
@@ -107,9 +118,10 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
             primary
             fluid
             type="submit"
-            disabled={!values.name || !values.registrationPlate || !values.vehicleType}
+            disabled={!values.name || !values.registrationPlate || !values.vehicleType || !values.photo}
+            loading={loading}
           >
-            Add
+              Add
           </Button>
         </Form>
       )}
@@ -118,10 +130,13 @@ const DriverDetails = ({ vehicles, onChangeVehicle, onAddVehicle }) => (
 );
 
 DriverDetails.propTypes = {
-  vehicles: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-  })),
+  driver: PropTypes.shape({
+    vehicles: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired
+    }))
+  }),
+  loading: PropTypes.bool.isRequired,
   onChangeVehicle: PropTypes.func.isRequired,
   onAddVehicle: PropTypes.func.isRequired
 };

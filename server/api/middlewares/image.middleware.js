@@ -1,4 +1,4 @@
-const multer = require('multer');
+const multer = require('@koa/multer');
 const { fileSizeLimit } = require('../../config/imgur.config');
 
 const storage = multer.memoryStorage();

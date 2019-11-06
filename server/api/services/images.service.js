@@ -16,7 +16,7 @@ const uploadToImgur = async (file) => {
     );
     return {
       link: data.link,
-      deleteHash: data.deletehash
+      deletehash: data.deletehash,
     };
   } catch ({ response: { data: { status, data } } }) { // parse Imgur error
     return Promise.reject({ status, message: data.error });
@@ -25,7 +25,7 @@ const uploadToImgur = async (file) => {
 
 const upload = async (file) => {
   const image = await uploadToImgur(file);
-  return add(image);
+  return add({ ...image, createdAt: new Date() });
 };
 
 module.exports = {

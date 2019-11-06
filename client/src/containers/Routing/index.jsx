@@ -57,7 +57,7 @@ Routing.propTypes = {
   loginRequest: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ user: { loading, isAuthorized } }) => ({
+const mapStateToProps = ({ profile: { loading, isAuthorized } }) => ({
   loading,
   isAuthorized
 });

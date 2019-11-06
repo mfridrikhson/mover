@@ -6,9 +6,16 @@ import { Tab } from 'semantic-ui-react';
 
 import UserInfoForm from '../../components/UserInfoForm';
 import DriverDetails from '../../components/DriverDetails';
+import { addVehicle } from '../../routines';
 import { updateUserRequest } from './actions';
 
-const Settings = ({ user: { id, firstName, lastName, type }, updateUserRequest }) => {
+const Settings = ({
+  user: { id, firstName, lastName, type },
+  driver,
+  loading,
+  updateUserRequest,
+  addVehicle
+}) => {
   const panes = [
     {
       menuItem: { key: 'profile', icon: 'user', content: 'Profile Info' },
@@ -31,8 +38,10 @@ const Settings = ({ user: { id, firstName, lastName, type }, updateUserRequest }
       render: () => (
         <Tab.Pane>
           <DriverDetails
+            driver={driver}
+            loading={loading}
             onChangeVehicle={(data) => console.log(data)}
-            onAddVehicle={(data) => console.log(data)}
+            onAddVehicle={addVehicle}
           />
         </Tab.Pane>
       )
@@ -51,15 +60,21 @@ Settings.propTypes = {
     lastName: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
   }).isRequired,
-  updateUserRequest: PropTypes.func.isRequired
+  driver: PropTypes.object, // TODO: Define
+  loading: PropTypes.bool.isRequired,
+  updateUserRequest: PropTypes.func.isRequired,
+  addVehicle: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ user: { user } }) => ({
-  user
+const mapStateToProps = ({ profile: { user, driver, loading } }) => ({
+  user,
+  driver,
+  loading,
 });
 
 const mapDispatchToProps = {
-  updateUserRequest
+  updateUserRequest,
+  addVehicle
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

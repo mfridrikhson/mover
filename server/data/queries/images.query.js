@@ -1,14 +1,14 @@
 const knex = require('../db/connection');
 
 const getById = id => {
-  return knex('orders')
+  return knex('images')
     .select('*')
     .where({ id })
     .first();
 };
 
 const add = image => {
-  return knex('orders')
+  return knex('images')
     .insert(image)
     .returning('*');
 };

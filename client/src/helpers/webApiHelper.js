@@ -6,8 +6,10 @@ function getFetchUrl({ endpoint, queryParams }) {
 
 function getFetchArgs(args) {
   const headers = new Headers();
-  headers.set('Content-Type', 'application/json');
-  headers.set('Accept','application/json');
+  if (!args.attachment) {
+    headers.set('Content-Type', 'application/json');
+    headers.set('Accept','application/json');
+  }
 
   const token = localStorage.getItem('token');
   if (token) {
