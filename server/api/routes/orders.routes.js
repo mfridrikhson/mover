@@ -9,6 +9,8 @@ const {
   updateOrderById
 } = require('../services/orders.service');
 
+const { getOrderRoutesByOrderId } = require('../services/orderRoutes.service');
+
 router.get('/', async (ctx) => {
   ctx.body = await getAllOrders(ctx.request.query);
 });
@@ -18,6 +20,20 @@ router.get('/:id', async (ctx) => {
     const order = await getOrderById(ctx.params.id);
     if (order) {
       ctx.body = order;
+    } else {
+      ctx.status = 400;
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = err.message || 'Error occurred';
+  }
+});
+
+router.get('/:id/route', async (ctx) => {
+  try {
+    const orderRoutes = await getOrderRoutesByOrderId(ctx.params.id);
+    if (orderRoutes) {
+      ctx.body = orderRoutes;
     } else {
       ctx.status = 400;
     }

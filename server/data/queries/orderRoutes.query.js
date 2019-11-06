@@ -1,40 +1,39 @@
 const knex = require('../db/connection');
 
 const getAll = () => {
-  return knex('users')
+  return knex('orderRoutes')
     .select('*');
 };
 
 const getById = id => {
-  return knex('users')
+  return knex('orderRoutes')
     .select('*')
     .where({ id })
     .first();
 };
 
-const getByEmail = email => {
-  return knex('users')
+const getByOrderId = orderId => {
+  return knex('orderRoutes')
     .select('*')
-    .where({ email })
-    .first();
+    .where({ orderId });
 };
 
-const add = user => {
-  return knex('users')
-    .insert(user)
+const add = orderRoute => {
+  return knex('orderRoutes')
+    .insert(orderRoute)
     .returning('*');
 };
 
 const deleteById = id => {
-  return knex('users')
+  return knex('orderRoutes')
     .del()
     .where({ id })
     .returning('*');
 };
 
-const updateById = (id, user) => {
-  return knex('users')
-    .update(user)
+const updateById = (id, orderRoute) => {
+  return knex('orderRoutes')
+    .update(orderRoute)
     .where({ id })
     .returning('*');
 };
@@ -42,7 +41,7 @@ const updateById = (id, user) => {
 module.exports = {
   getAll,
   getById,
-  getByEmail,
+  getByOrderId,
   add,
   deleteById,
   updateById
