@@ -1,10 +1,10 @@
 const axios = require('axios');
 const { imgurId } = require('../../config/imgur.config');
-const { getById } = require('../../data/queries/images.query');
+const { getById, add } = require('../../data/queries/images.query');
 
 const getImageById = id => getById(id);
 
-const upload = async file => {
+const uploadToImgur = async (file) => {
   try {
     const { data: { data } } = await axios.post(
       'https://api.imgur.com/3/upload',
@@ -14,7 +14,6 @@ const upload = async file => {
         headers: { Authorization: `Client-ID ${imgurId}` }
       }
     );
-
     return {
       link: data.link,
       deleteHash: data.deletehash
@@ -22,6 +21,11 @@ const upload = async file => {
   } catch ({ response: { data: { status, data } } }) { // parse Imgur error
     return Promise.reject({ status, message: data.error });
   }
+};
+
+const upload = async (file) => {
+  const image = await uploadToImgur(file);
+  return add(image);
 };
 
 module.exports = {

@@ -7,4 +7,10 @@ const getById = id => {
     .first();
 };
 
-module.exports = { getById };
+const add = image => {
+  return knex('orders')
+    .insert(image)
+    .returning('*');
+};
+
+module.exports = { getById, add };
