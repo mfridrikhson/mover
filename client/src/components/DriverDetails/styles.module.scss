@@ -1,7 +1,17 @@
-:local(.driverInfoControls) {
-  display: flex;
-  justify-content: stretch;
-  align-items: center;
+:local(.uploadButton[type=button]) {
+  -webkit-appearance: none;
+}
+
+:local(.uploadInput) {
+   display: none;
+}
+
+:global(.ui.form) {
+  :global(.field label):local(.uploadButton) {
+    margin: 0 .25em 0 0;
+    color: white;
+    font-size: 1rem;
+  }
 }
 
 :local(.colorPicker) {
@@ -11,3 +21,12 @@
     margin: auto;
   }
 }
+
+:global(.ui.form .fields) {
+  :local(.stackedFieldGroup) {
+    :global(.field:not(:last-child)) {
+      margin-bottom: 1em;
+    }
+  }
+}
+
