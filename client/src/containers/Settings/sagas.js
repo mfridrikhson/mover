@@ -1,8 +1,9 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as authService from '../../services/authService';
 import * as userService from '../../services/userService';
+import * as driverService from '../../services/driverService';
 import * as vehicleService from '../../services/vehicleService';
-import { fetchUser, addVehicle } from '../../routines';
+import { fetchUser, addVehicle, updateDriver } from '../../routines';
 import { LOGIN_REQUEST, REGISTRATION_REQUEST, UPDATE_USER_REQUEST } from './actionTypes';
 
 function* userRequest() {
@@ -55,6 +56,18 @@ function* updateUserRequest({ payload }) {
   }
 }
 
+function* updateDriverRequest({ payload }) {
+  try {
+    const user = yield call(driverService.updateDriver, payload);
+
+    yield put(updateDriver.success(user));
+  } catch (error) {
+    yield put(updateDriver.failure(error.message));
+  } finally {
+    yield put(updateDriver.fulfill());
+  }
+}
+
 function* addVehicleRequest({ payload }) {
   try {
     const vehicle = yield call(vehicleService.addVehicle, payload);
@@ -83,6 +96,10 @@ function* watchUpdateUserRequest() {
   yield takeEvery(UPDATE_USER_REQUEST, updateUserRequest);
 }
 
+function* watchUpdateDriverRequest() {
+  yield takeEvery(updateDriver.TRIGGER, updateDriverRequest);
+}
+
 function* watchAddVehicleRequest() {
   yield takeEvery(addVehicle.TRIGGER, addVehicleRequest);
 }
@@ -93,6 +110,7 @@ export default function* userSagas() {
     watchRegistrationRequest(),
     watchLoginRequest(),
     watchUpdateUserRequest(),
+    watchUpdateDriverRequest(),
     watchAddVehicleRequest()
   ]);
 }

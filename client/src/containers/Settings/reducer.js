@@ -1,4 +1,4 @@
-import { fetchUser, addVehicle } from '../../routines';
+import { fetchUser, addVehicle, updateDriver } from '../../routines';
 import { REGISTRATION_REQUEST, LOGIN_REQUEST } from './actionTypes';
 
 const initialState = {
@@ -13,6 +13,7 @@ export const profile = (state = initialState, action) => {
   switch (action.type) {
     case REGISTRATION_REQUEST:
     case LOGIN_REQUEST:
+    case updateDriver.TRIGGER:
     case addVehicle.TRIGGER:
     case fetchUser.TRIGGER:
       return {
@@ -25,6 +26,14 @@ export const profile = (state = initialState, action) => {
         isAuthorized: !!(action.payload && action.payload.id),
         user: { ...action.payload, type: 'driver' }
       };
+    case updateDriver.SUCCESS:
+      return {
+        ...state,
+        driver: {
+          ...state.driver,
+          ...action.payload
+        }
+      };
     case addVehicle.SUCCESS:
       return {
         ...state,
@@ -33,12 +42,14 @@ export const profile = (state = initialState, action) => {
           vehicles: [...state.vehicles, action.payload]
         }
       };
+    case updateDriver.FAILURE:
     case addVehicle.FAILURE:
     case fetchUser.FAILURE:
       return {
         ...state,
         error: action.payload
       };
+    case updateDriver.FULFILL:
     case addVehicle.FULFILL:
     case fetchUser.FULFILL:
       return {

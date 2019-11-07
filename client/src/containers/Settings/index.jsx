@@ -6,7 +6,7 @@ import { Tab } from 'semantic-ui-react';
 
 import UserInfoForm from '../../components/UserInfoForm';
 import DriverDetails from '../../components/DriverDetails';
-import { addVehicle } from '../../routines';
+import { addVehicle, updateDriver } from '../../routines';
 import { updateUserRequest } from './actions';
 
 const Settings = ({
@@ -14,7 +14,8 @@ const Settings = ({
   driver,
   loading,
   updateUserRequest,
-  addVehicle
+  addVehicle,
+  updateDriver
 }) => {
   const panes = [
     {
@@ -41,6 +42,7 @@ const Settings = ({
             driver={driver}
             loading={loading}
             onChangeVehicle={(data) => console.log(data)}
+            onLoadLicense={updateDriver}
             onAddVehicle={addVehicle}
           />
         </Tab.Pane>
@@ -63,6 +65,7 @@ Settings.propTypes = {
   driver: PropTypes.object, // TODO: Define
   loading: PropTypes.bool.isRequired,
   updateUserRequest: PropTypes.func.isRequired,
+  updateDriver: PropTypes.func.isRequired,
   addVehicle: PropTypes.func.isRequired
 };
 
@@ -74,6 +77,7 @@ const mapStateToProps = ({ profile: { user, driver, loading } }) => ({
 
 const mapDispatchToProps = {
   updateUserRequest,
+  updateDriver,
   addVehicle
 };
 
