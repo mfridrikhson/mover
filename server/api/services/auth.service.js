@@ -9,8 +9,12 @@ const login = async ({ id, email }) => ({
 
 const register = async (user) => {
   const newUser = await addUser(user);
-  if( newUser.user ) {
-    return login(newUser.user);
+  if (newUser.user) {
+    const loginData = await login(newUser.user);
+    return {
+      ...loginData,
+      driver: newUser.driver
+    };
   }
   return login(newUser);
 };

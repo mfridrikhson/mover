@@ -27,7 +27,7 @@ const getUserById = async (id) => {
 const addUser = async (user) => {
   try {
     const [createdUser] = await add(user);
-    if(createdUser.isDriver) {
+    if (createdUser.isDriver) {
       const [createdDriver] = await addDriver({ userId: createdUser.id });
       return { user: createdUser, driver: createdDriver };
     }

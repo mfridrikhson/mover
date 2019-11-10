@@ -20,12 +20,22 @@ export const profile = (state = initialState, action) => {
         ...state,
         loading: true
       };
-    case fetchUser.SUCCESS:
+    case fetchUser.SUCCESS: {
+      if (!action.payload.driver) {
+        return {
+          ...state,
+          isAuthorized: !!(action.payload && action.payload.user.id),
+          user: action.payload.user
+        };
+      }
+
       return {
         ...state,
-        isAuthorized: !!(action.payload && action.payload.id),
-        user: { ...action.payload, type: 'driver' }
+        isAuthorized: !!(action.payload && action.payload.user.id),
+        user: action.payload.user,
+        driver: action.payload.driver
       };
+    }
     case updateDriver.SUCCESS:
       return {
         ...state,

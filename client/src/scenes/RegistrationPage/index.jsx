@@ -38,7 +38,7 @@ const RegistrationPage = ({ isAuthorized, register }) => {
             initialValues={{
               email: '',
               password: '',
-              isDriver: 'isDriver',
+              isDriver: false,
               firstName: '',
               lastName: '',
             }}
@@ -72,9 +72,10 @@ const RegistrationPage = ({ isAuthorized, register }) => {
                   required
                 />
                 <Form.Checkbox
-                  value={values.isDriver}
+                  checked={!!values.isDriver}
                   label="Register as a driver"
                   id="isDriver"
+                  name="isDriver"
                   onChange={handleChange}
                   disabled={isSubmitting}
                   slider
