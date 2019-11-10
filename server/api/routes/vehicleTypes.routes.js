@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const router = new Router({ prefix: '/vehicleTypes' });
+const router = new Router({ prefix: '/vehicle-types' });
 
 const {
   getAllVehicleTypes,

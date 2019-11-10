@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Header, Icon, Step } from 'semantic-ui-react';
+import { Header, Icon, Loader, Step } from 'semantic-ui-react';
 
 import CargoParamsForm from '../../components/CargoParamsForm';
 import TransportTypeForm from '../../components/TransportTypeForm';
@@ -11,6 +11,7 @@ import { submitOrder } from '../../routines';
 import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
+import { getVehicleTypes } from '../../services/vehicleTypeService';
 
 const orderSteps = {
   cargoParams: 0,
@@ -27,7 +28,8 @@ class Order extends React.Component {
       step: orderSteps.cargoParams,
       volumeWeight: '',
       cargoType: '',
-      transportType: '',
+      vehicleTypeId: '',
+      vehicleTypes: null,
       fromPoint: undefined,
       toPoint: undefined,
       isAccepted: false,
@@ -66,7 +68,7 @@ class Order extends React.Component {
     const {
       volumeWeight,
       cargoType,
-      // transportType,
+      vehicleTypeId,
       fromPoint,
       toPoint
     } = this.state;
@@ -74,11 +76,7 @@ class Order extends React.Component {
     this.props.submitOrder({
       volumeWeight,
       cargoType,
-      vehicleTypeId: '6485c25f-b245-4903-baac-27f27a0c537f',
-      vehicleId: '6485c25f-b245-4903-baac-27f27a0c537c',
-      billId: '6485c25f-b245-4903-baac-27f27a0c537e',
-      driverId: '6485c25f-b245-4903-baac-27f27a0c537a',
-      // transportType,
+      vehicleTypeId,
       fromPoint,
       toPoint
     });
@@ -88,7 +86,8 @@ class Order extends React.Component {
     const {
       volumeWeight,
       cargoType,
-      transportType,
+      vehicleTypeId,
+      vehicleTypes,
       fromPoint,
       toPoint
     } = this.state;
@@ -102,8 +101,15 @@ class Order extends React.Component {
           onContinue={this.onContinue}
         />;
       case orderSteps.transportType:
+        if (!vehicleTypes) {
+          getVehicleTypes().then(vehicleTypes => this.setState({ vehicleTypes }));
+
+          return <Loader active />;
+        }
+
         return <TransportTypeForm
-          transportType={transportType}
+          vehicleTypeId={vehicleTypeId}
+          vehicleTypes={vehicleTypes}
           onBack={this.onBack}
           onContinue={this.onContinue}
         />;
@@ -118,7 +124,7 @@ class Order extends React.Component {
         return <ConfirmOrder
           volumeWeight={volumeWeight}
           cargoType={cargoType}
-          transportType={transportType}
+          transportType={vehicleTypes.find(({ id }) => id === vehicleTypeId).type}
           fromAddress={fromPoint.address}
           toAddress={toPoint.address}
           loading={loading}

@@ -70,10 +70,10 @@ const RoutePointsForm = ({ toPoint, fromPoint, onBack, onContinue }) => {
 
 const routePointInterface = {
   address: PropTypes.string.isRequired,
-  coords: {
+  coords: PropTypes.exact({
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired
-  }
+  })
 };
 
 RoutePointsForm.propTypes = {
