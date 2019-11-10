@@ -41,7 +41,8 @@ passport.use(
           email: email,
           password: await cryptoHelper.encrypt(password),
           firstName: request.body.firstName,
-          lastName: request.body.lastName
+          lastName: request.body.lastName,
+          isDriver: request.body.isDriver
         });
       } catch (err) {
         return done(err);
