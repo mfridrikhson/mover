@@ -1,4 +1,5 @@
-const { getById, add } = require('../../data/queries/users.query');
+const { getById } = require('../../data/queries/users.query');
+const { addUser } = require('../services/users.service');
 const tokenHelper = require('../../helpers/token.helper');
 
 const login = async ({ id, email }) => ({
@@ -7,7 +8,10 @@ const login = async ({ id, email }) => ({
 });
 
 const register = async (user) => {
-  const [newUser] = await add(user);
+  const newUser = await addUser(user);
+  if( newUser.user ) {
+    return login(newUser.user);
+  }
   return login(newUser);
 };
 
