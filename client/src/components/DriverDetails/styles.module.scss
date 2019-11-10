@@ -1,0 +1,25 @@
+:local(.uploadButton[type=button]) {
+  -webkit-appearance: none;
+}
+
+:local(.uploadInput) {
+   display: none;
+}
+
+:local(.colorPicker) {
+  text-align: center;
+
+  :global(.sketch-picker) {
+    margin: auto;
+  }
+}
+
+:global(.ui.form .fields) {
+  :local(.stackedFieldGroup) {
+    :global(.field),
+    :global(.ui.button){
+      margin-bottom: 1em;
+    }
+  }
+}
+

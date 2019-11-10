@@ -29,7 +29,7 @@ router.get('/:id', async (ctx) => {
   }
 });
 
-router.get('/driverId/:driverId', async (ctx) => {
+router.get('/driver/:driverId', async (ctx) => {
   try {
     const vehicles = await getVehiclesByDriverId(ctx.params.driverId);
     if (vehicles) {
@@ -43,7 +43,7 @@ router.get('/driverId/:driverId', async (ctx) => {
   }
 });
 
-router.get('/vehicleTypeId/:vehicleTypeId', async (ctx) => {
+router.get('/type/:vehicleTypeId', async (ctx) => {
   try {
     const vehicles = await getVehiclesByVehicleTypeId(ctx.params.vehicleTypeId);
     if (vehicles) {

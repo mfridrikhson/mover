@@ -6,8 +6,10 @@ function getFetchUrl({ endpoint, queryParams }) {
 
 function getFetchArgs(args) {
   const headers = new Headers();
-  headers.set('Content-Type', 'application/json');
-  headers.set('Accept','application/json');
+  if (!args.attachment) {
+    headers.set('Content-Type', 'application/json');
+    headers.set('Accept','application/json');
+  }
 
   const token = localStorage.getItem('token');
   if (token) {
@@ -15,7 +17,14 @@ function getFetchArgs(args) {
   }
 
   let body;
-  if (args.requestData) {
+  if (args.attachment) {
+    if (args.type === 'GET') {
+      throw new Error('GET request does not support attachments.');
+    }
+    const formData = new FormData();
+    formData.append('image', args.attachment);
+    body = formData;
+  } else if (args.requestData) {
     if (args.type === 'GET') {
       throw new Error('GET request does not support request body.');
     }

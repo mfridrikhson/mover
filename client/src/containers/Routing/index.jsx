@@ -11,7 +11,7 @@ import Moving from '../../scenes/Moving';
 import NotFound from '../../scenes/NotFound';
 import PrivateRoute from '../PrivateRoute';
 import { fetchUser } from '../../routines';
-import { registrationRequest, loginRequest } from '../ProfileInfo/actions';
+import { registrationRequest, loginRequest } from '../Settings/actions';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -57,7 +57,7 @@ Routing.propTypes = {
   loginRequest: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ user: { loading, isAuthorized } }) => ({
+const mapStateToProps = ({ profile: { loading, isAuthorized } }) => ({
   loading,
   isAuthorized
 });

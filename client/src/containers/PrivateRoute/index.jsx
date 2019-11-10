@@ -19,7 +19,7 @@ PrivateRoute.defaultProps = {
   location: undefined
 };
 
-const mapStateToProps = ({ user: { isAuthorized, loading } }) => ({
+const mapStateToProps = ({ profile: { isAuthorized, loading } }) => ({
   isAuthorized,
   loading
 });
