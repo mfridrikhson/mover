@@ -8,6 +8,7 @@ import TransportTypeForm from '../../components/TransportTypeForm';
 import RoutePointsForm from '../../components/RoutePointsForm';
 import ConfirmOrder from '../../components/ConfirmOrder';
 import { submitOrder } from '../../routines';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
 
@@ -28,8 +29,31 @@ class Order extends React.Component {
       cargoType: '',
       transportType: '',
       fromPoint: undefined,
-      toPoint: undefined
+      toPoint: undefined,
+      isAccepted: false,
+      driverInfo: null
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.order && !prevProps.order) {
+      this.initSocket();
+    }
+  }
+
+  initSocket() {
+    this.socket = socketInit();
+    const { order: { id } } = this.props;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('acceptedOrder', driverInfo => {
+      this.setState({ isAccepted: true, driverInfo });
+    });
+
+    this.socket.on('orderFinished', async () => {
+      this.setState({ isAccepted: false, driverInfo: null });
+    });
   }
 
   goToStep = step => this.setState({ step });
