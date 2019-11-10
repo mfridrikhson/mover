@@ -29,7 +29,7 @@ router.get('/:id', async (ctx) => {
 
 router.post('/', async (ctx) => {
   try {
-    const [user] = await addUser(ctx.request.body);
+    const user = await addUser(ctx.request.body);
     if (user) {
       ctx.status = 201;
       ctx.body = user;
