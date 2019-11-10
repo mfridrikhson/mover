@@ -7,6 +7,7 @@ import { Button, Divider, Dropdown, Form, Grid } from 'semantic-ui-react';
 
 import { uploadImage } from '../../services/imageService';
 import VehicleTypeSelect from '../VehicleTypeSelect';
+import UploadFileButton from '../UploadFileButton';
 
 import styles from './styles.module.scss';
 
@@ -23,8 +24,9 @@ const DriverDetails = ({
   onLoadLicense,
   onAddVehicle
 }) => {
-  const [isImageUploading, setIsImageUploading] = useState(false);
   const [isLicenseUploading, setIsLicenseUploading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const [isTechPassportUploading, setIsTechPassportUploading] = useState(false);
 
   return (
     <>
@@ -40,25 +42,13 @@ const DriverDetails = ({
             />
           </Grid.Column>
           <Grid.Column>
-            <Button
-              className={styles.uploadButton}
-              as="label"
-              htmlFor="license"
+            <UploadFileButton
+              text="Upload Your License"
               icon="drivers license"
-              content="Upload Your License"
-              type="button"
-              loading={isLicenseUploading}
-              fluid
-              primary
-            />
-            <input
-              id="license"
-              className={styles.uploadInput}
-              accept="image/*"
-              type="file"
               name="license"
-              multiple
-              onChange={async ({ target }) => {
+              acceptType="image/*"
+              isLoading={isLicenseUploading}
+              onFileLoad={async ({ target }) => {
                 setIsLicenseUploading(true);
                 const { link: photo } = await uploadImage(target.files[0]);
                 setIsLicenseUploading(false);
@@ -76,7 +66,8 @@ const DriverDetails = ({
           registrationPlate: '',
           color: '#000000',
           vehicleType: '',
-          photo: null
+          photo: '',
+          techPassportUrl: ''
         }}
         validationSchema={validationSchema}
         onSubmit={onAddVehicle}
@@ -127,29 +118,30 @@ const DriverDetails = ({
                     }}
                   />
                 </Form.Field>
-                <Button
-                  className={styles.uploadButton}
-                  as="label"
-                  htmlFor="photo"
+                <UploadFileButton
+                  text="Upload Vehicle Photo"
                   icon="photo"
-                  content="Upload Image"
-                  type="button"
-                  loading={isImageUploading}
-                  fluid
-                  primary
-                />
-                <input
-                  id="photo"
-                  className={styles.uploadInput}
-                  accept="image/*"
-                  type="file"
                   name="photo"
-                  multiple
-                  onChange={async ({ target }) => {
+                  acceptType="image/*"
+                  isLoading={isImageUploading}
+                  onFileLoad={async ({ target }) => {
                     setIsImageUploading(true);
                     const { link: photo } = await uploadImage(target.files[0]);
                     setIsImageUploading(false);
                     setFieldValue('photo', photo);
+                  }}
+                />
+                <UploadFileButton
+                  text="Upload Tech Passport"
+                  icon="file"
+                  name="techPassportUrl"
+                  acceptType="image/*"
+                  isLoading={isTechPassportUploading}
+                  onFileLoad={async ({ target }) => {
+                    setIsTechPassportUploading(true);
+                    const { link: techPassportUrl } = await uploadImage(target.files[0]);
+                    setIsTechPassportUploading(false);
+                    setFieldValue('techPassportUrl', techPassportUrl);
                   }}
                 />
               </div>
@@ -158,7 +150,13 @@ const DriverDetails = ({
               primary
               fluid
               type="submit"
-              disabled={!values.name || !values.registrationPlate || !values.vehicleType || !values.photo}
+              disabled={
+                !values.name
+                || !values.registrationPlate
+                || !values.vehicleType
+                || !values.photo
+                || !values.techPassportUrl
+              }
               loading={loading}
             >
               Add

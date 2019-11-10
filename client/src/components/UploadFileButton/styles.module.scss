@@ -1,0 +1,15 @@
+:local(.uploadButton[type=button]) {
+  -webkit-appearance: none;
+}
+
+:local(.uploadInput) {
+   display: none;
+}
+
+:global(.ui.form) {
+  :global(.field label):local(.uploadButton) {
+    margin: 0 .25em 0 0;
+    color: white;
+    font-size: 1rem;
+  }
+}

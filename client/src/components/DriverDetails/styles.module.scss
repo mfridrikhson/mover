@@ -6,14 +6,6 @@
    display: none;
 }
 
-:global(.ui.form) {
-  :global(.field label):local(.uploadButton) {
-    margin: 0 .25em 0 0;
-    color: white;
-    font-size: 1rem;
-  }
-}
-
 :local(.colorPicker) {
   text-align: center;
 
@@ -24,7 +16,8 @@
 
 :global(.ui.form .fields) {
   :local(.stackedFieldGroup) {
-    :global(.field:not(:last-child)) {
+    :global(.field),
+    :global(.ui.button){
       margin-bottom: 1em;
     }
   }
