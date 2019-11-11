@@ -21,9 +21,9 @@ const getUserById = async (id) => {
     const user = await getById(id);
     if (user.isDriver) {
       const [createdDriver] = await addDriver({ userId: user.id });
-      return { user: user, driver: createdDriver };
+      return { user, driver: createdDriver };
     }
-    return user;
+    return { user };
   } catch (err) {
     throw err;
   }
@@ -32,11 +32,12 @@ const getUserById = async (id) => {
 const addUser = async (user) => {
   try {
     const [createdUser] = await add(user);
+    console.log(createdUser);
     if (createdUser.isDriver) {
       const [createdDriver] = await addDriver({ userId: createdUser.id });
       return { user: createdUser, driver: createdDriver };
     }
-    return createdUser;
+    return { user: createdUser };
   } catch (err) {
     throw err;
   }

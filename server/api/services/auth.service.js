@@ -7,13 +7,13 @@ const login = async ({ id, email }) => {
   const user = await getById(id);
   if (user.isDriver) {
     return {
-      user: user,
+      user,
       driver: await getDriverByUserId(id),
       token: await tokenHelper.createToken({ id, email })
     };
   }
   return {
-    user: user,
+    user,
     token: await tokenHelper.createToken({ id, email })
   };
 };
