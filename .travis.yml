@@ -17,7 +17,7 @@ deploy:
       repo: TheSubliminal/mover
       branch: develop
     bucket: movers3
-    region: us-west-2a
+    region: us-west-2
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
@@ -26,7 +26,7 @@ deploy:
     bundle_type: zip
     application: mover
     deployment_group: mover_deployment_group
-    region: us-west-2a
+    region: us-west-2
     on: *2
 
 script:
