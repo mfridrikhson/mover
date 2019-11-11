@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - "12.13.0"
+branches:
+  only:
+    - develop
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    local_dir: dpl_cd_upload
+    skip_cleanup: true
+    on: &2
+      repo: TheSubliminal/mover
+      branch: develop
+    bucket: moverbucket
+    region: us-west-2a
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: moverbucket
+    key: latest.zip
+    bundle_type: zip
+    application: mover-deploy-app
+    deployment_group: mover-deploy-app-group
+    region: us-west-2a
+    on: *2
