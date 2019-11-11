@@ -46,9 +46,11 @@ router.get('/:id/route', async (ctx) => {
 router.post('/', async (ctx) => {
   try {
     const order = await addOrder(ctx.request.body);
+
     if (order) {
       ctx.status = 201;
       ctx.body = order;
+      ctx.io.to(order.id).emit();
     } else {
       ctx.body = 400;
     }

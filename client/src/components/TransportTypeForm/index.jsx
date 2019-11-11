@@ -7,12 +7,12 @@ import VehicleTypeSelect from '../VehicleTypeSelect';
 
 import styles from './styles.module.scss';
 
-const TransportTypeForm = ({ transportType, onBack, onContinue }) => {
+const TransportTypeForm = ({ vehicleTypeId, vehicleTypes, onBack, onContinue }) => {
   return (
     <div className={styles.transportTypeFormContainer}>
       <Formik
         initialValues={{
-          transportType
+          vehicleTypeId
         }}
         onSubmit={onContinue}
       >
@@ -21,14 +21,15 @@ const TransportTypeForm = ({ transportType, onBack, onContinue }) => {
             <Form.Field required>
               <label>Transport type</label>
               <VehicleTypeSelect
-                value={values.transportType}
+                value={values.vehicleTypeId}
+                vehicleTypes={vehicleTypes}
                 onChange={(event, data) => {
-                  setFieldValue('transportType', data.value);
+                  setFieldValue('vehicleTypeId', data.value);
                 }}
               />
             </Form.Field>
             <Button secondary type="button" onClick={onBack}>Back</Button>
-            <Button primary type="submit" disabled={!values.transportType}>Continue</Button>
+            <Button primary type="submit" disabled={!values.vehicleTypeId}>Continue</Button>
           </Form>
         )}
       </Formik>
@@ -37,7 +38,12 @@ const TransportTypeForm = ({ transportType, onBack, onContinue }) => {
 };
 
 TransportTypeForm.propTypes = {
-  transportType: PropTypes.string.isRequired,
+  vehicleTypeId: PropTypes.string.isRequired,
+  vehicleTypes: PropTypes.arrayOf(PropTypes.exact({
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    pricePerKm: PropTypes.number.isRequired
+  })).isRequired,
   onBack: PropTypes.func.isRequired,
   onContinue: PropTypes.func.isRequired
 };

@@ -20,10 +20,10 @@ function* userRequest() {
 
 function* registrationRequest({ payload }) {
   try {
-    const { user, token } = yield call(authService.register, payload);
+    const { token, ...userData } = yield call(authService.register, payload);
 
     localStorage.setItem('token', token);
-    yield put(fetchUser.success(user));
+    yield put(fetchUser.success(userData));
   } catch (error) {
     yield put(fetchUser.failure(error.message));
   } finally {
@@ -33,10 +33,10 @@ function* registrationRequest({ payload }) {
 
 function* loginRequest({ payload }) {
   try {
-    const { user, token } = yield call(authService.login, payload);
+    const { token, ...userData } = yield call(authService.login, payload);
 
     localStorage.setItem('token', token);
-    yield put(fetchUser.success(user));
+    yield put(fetchUser.success(userData));
   } catch (error) {
     yield put(fetchUser.failure(error.message));
   } finally {
