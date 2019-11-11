@@ -4,6 +4,9 @@ node_js:
 branches:
   only:
     - develop
+cache:
+  directories:
+    - node_modules
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY_ID
@@ -13,15 +16,20 @@ deploy:
     on: &2
       repo: TheSubliminal/mover
       branch: develop
-    bucket: moverbucket
+    bucket: movers3
     region: us-west-2a
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: moverbucket
+    bucket: movers3
     key: latest.zip
     bundle_type: zip
-    application: mover-deploy-app
-    deployment_group: mover-deploy-app-group
+    application: mover
+    deployment_group: mover_deployment_group
     region: us-west-2a
     on: *2
+
+script:
+  - zip -r latest *
+  - mkdir -p dpl_cd_upload
+  - mv latest.zip dpl_cd_upload/latest.zip
