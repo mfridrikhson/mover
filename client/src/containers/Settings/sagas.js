@@ -70,6 +70,7 @@ function* updateDriverRequest({ payload }) {
 
 function* addVehicleRequest({ payload }) {
   try {
+    console.log(payload);
     const vehicle = yield call(vehicleService.addVehicle, payload);
 
     yield put(addVehicle.success(vehicle));

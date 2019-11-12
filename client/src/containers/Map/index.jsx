@@ -30,7 +30,6 @@ class Map extends React.Component {
   onViewportChange = viewport => this.setState({ viewport });
 
   render() {
-
     return (
       <MapBox
         {...this.state.viewport}

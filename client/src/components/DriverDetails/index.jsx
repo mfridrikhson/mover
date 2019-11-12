@@ -14,12 +14,13 @@ import styles from './styles.module.scss';
 const validationSchema = yup.object().shape({
   name: yup.string().max(250).required('Vehicle name is required'),
   registrationPlate: yup.string().max(20).required('Registration plate is required'),
-  vehicleType: yup.string().required('Vehicle type is required')
+  vehicleTypeId: yup.string().required('Vehicle type is required')
 });
 
 const DriverDetails = ({
-  driver,
+  vehicles,
   loading,
+  vehicleTypes,
   onChangeVehicle,
   onLoadLicense,
   onAddVehicle
@@ -38,7 +39,7 @@ const DriverDetails = ({
               selection
               fluid
               onChange={onChangeVehicle}
-              options={driver && driver.vehicles.map(({ id, name }) => ({ key: id, text: name, value: id }))}
+              options={vehicles && vehicles.map(({ id, type }) => ({ key: id, text: type, value: id }))}
             />
           </Grid.Column>
           <Grid.Column>
@@ -50,9 +51,9 @@ const DriverDetails = ({
               isLoading={isLicenseUploading}
               onFileLoad={async ({ target }) => {
                 setIsLicenseUploading(true);
-                const { link: photo } = await uploadImage(target.files[0]);
+                const { link: license } = await uploadImage(target.files[0]);
                 setIsLicenseUploading(false);
-                onLoadLicense(photo);
+                onLoadLicense(license);
               }}
             />
           </Grid.Column>
@@ -65,8 +66,8 @@ const DriverDetails = ({
           name: '',
           registrationPlate: '',
           color: '#000000',
-          vehicleType: '',
-          photo: '',
+          vehicleTypeId: '',
+          photoUrl: '',
           techPassportUrl: ''
         }}
         validationSchema={validationSchema}
@@ -111,10 +112,11 @@ const DriverDetails = ({
                 <Form.Field required>
                   <label>Transport type</label>
                   <VehicleTypeSelect
-                    value={values.vehicleType}
+                    vehicleTypes={vehicleTypes}
+                    value={values.vehicleTypeId}
                     disabled={loading}
                     onChange={(event, data) => {
-                      setFieldValue('vehicleType', data.value);
+                      setFieldValue('vehicleTypeId', data.value);
                     }}
                   />
                 </Form.Field>
@@ -126,9 +128,9 @@ const DriverDetails = ({
                   isLoading={isImageUploading}
                   onFileLoad={async ({ target }) => {
                     setIsImageUploading(true);
-                    const { link: photo } = await uploadImage(target.files[0]);
+                    const { link: photoUrl } = await uploadImage(target.files[0]);
                     setIsImageUploading(false);
-                    setFieldValue('photo', photo);
+                    setFieldValue('photoUrl', photoUrl);
                   }}
                 />
                 <UploadFileButton
@@ -153,8 +155,8 @@ const DriverDetails = ({
               disabled={
                 !values.name
                 || !values.registrationPlate
-                || !values.vehicleType
-                || !values.photo
+                || !values.vehicleTypeId
+                || !values.photoUrl
                 || !values.techPassportUrl
               }
               loading={loading}
@@ -169,12 +171,15 @@ const DriverDetails = ({
 };
 
 DriverDetails.propTypes = {
-  driver: PropTypes.shape({
-    vehicles: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired
-    }))
-  }),
+  vehicles: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  })),
+  vehicleTypes: PropTypes.arrayOf(PropTypes.exact({
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    pricePerKm: PropTypes.number.isRequired
+  })).isRequired,
   loading: PropTypes.bool.isRequired,
   onChangeVehicle: PropTypes.func.isRequired,
   onLoadLicense: PropTypes.func.isRequired,

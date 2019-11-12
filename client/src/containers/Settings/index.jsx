@@ -2,67 +2,99 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Tab } from 'semantic-ui-react';
+import { Loader, Tab } from 'semantic-ui-react';
 
 import UserInfoForm from '../../components/UserInfoForm';
 import DriverDetails from '../../components/DriverDetails';
 import { addVehicle, updateDriver } from '../../routines';
 import { updateUserRequest } from './actions';
+import { getVehicleTypes } from '../../services/vehicleTypeService';
 
-const Settings = ({
-  user: { id, firstName, lastName, type },
-  driver,
-  loading,
-  updateUserRequest,
-  addVehicle,
-  updateDriver
-}) => {
-  const panes = [
-    {
-      menuItem: { key: 'profile', icon: 'user', content: 'Profile Info' },
-      render: () => (
-        <Tab.Pane>
-          <UserInfoForm
-            onSubmit={updateUserRequest}
-            id={id}
-            firstName={firstName}
-            lastName={lastName}
-          />
-        </Tab.Pane>
-      )
-    }
-  ];
+class Settings extends React.Component {
+  constructor(props) {
+    super(props);
 
-  if (type === 'driver') {
-    panes.push({
-      menuItem: { key: 'driverInfo', icon: 'truck', content: 'Driver Details' },
-      render: () => (
-        <Tab.Pane>
-          <DriverDetails
-            driver={driver}
-            loading={loading}
-            onChangeVehicle={(data) => console.log(data)}
-            onLoadLicense={updateDriver}
-            onAddVehicle={addVehicle}
-          />
-        </Tab.Pane>
-      )
-    });
+    this.state = {
+      vehicleTypes: null
+    };
   }
 
-  return (
-    <Tab panes={panes}/>
-  );
-};
+  async componentDidMount() {
+    const vehicleTypes = await getVehicleTypes();
+    this.setState({ vehicleTypes });
+  }
+
+  render() {
+    const {
+      user: { id, firstName, lastName, isDriver },
+      driver,
+      loading,
+      updateUserRequest,
+      addVehicle,
+      updateDriver
+    } = this.props;
+    const { vehicleTypes } = this.state;
+
+    const panes = [
+      {
+        menuItem: { key: 'profile', icon: 'user', content: 'Profile Info' },
+        render: () => (
+          <Tab.Pane>
+            <UserInfoForm
+              onSubmit={updateUserRequest}
+              id={id}
+              firstName={firstName}
+              lastName={lastName}
+            />
+          </Tab.Pane>
+        )
+      }
+    ];
+
+    if (isDriver) {
+      panes.push({
+        menuItem: { key: 'driverInfo', icon: 'truck', content: 'Driver Details' },
+        render: () => {
+          if (!vehicleTypes) {
+            return <Loader active/>;
+          }
+
+          return (
+            <Tab.Pane>
+              <DriverDetails
+                driver={driver}
+                loading={loading}
+                vehicles={[]}
+                vehicleTypes={vehicleTypes}
+                onChangeVehicle={(data) => console.log(data)}
+                onLoadLicense={updateDriver}
+                onAddVehicle={addVehicle}
+              />
+            </Tab.Pane>
+          );
+        }
+      });
+    }
+
+    return (
+      <Tab panes={panes}/>
+    );
+  }
+}
 
 Settings.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired
+    isDriver: PropTypes.bool.isRequired
   }).isRequired,
-  driver: PropTypes.object, // TODO: Define
+  driver: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    currentVehicleId: PropTypes.string,
+    driverLicenceUrl: PropTypes.string
+  }),
   loading: PropTypes.bool.isRequired,
   updateUserRequest: PropTypes.func.isRequired,
   updateDriver: PropTypes.func.isRequired,
