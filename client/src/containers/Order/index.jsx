@@ -13,11 +13,17 @@ import { socketInit } from '../../helpers/socketInitHelper';
 import styles from './styles.module.scss';
 import { getVehicleTypes } from '../../services/vehicleTypeService';
 
-const orderSteps = {
+const orderFormSteps = {
   cargoParams: 0,
   transportType: 1,
   routePoints: 2,
   confirmation: 3
+};
+
+const orderProcessSteps = {
+  searching: 0,
+  inProcess: 1,
+  finished: 2
 };
 
 class Order extends React.Component {
@@ -25,21 +31,26 @@ class Order extends React.Component {
     super(props);
 
     this.state = {
-      step: orderSteps.cargoParams,
+      /*formStep: orderFormSteps.cargoParams,
+      processStep: null,*/
+      formStep: null,
+      processStep: orderProcessSteps.searching,
       volumeWeight: '',
       cargoType: '',
       vehicleTypeId: '',
       vehicleTypes: null,
       fromPoint: undefined,
       toPoint: undefined,
-      isAccepted: false,
       driverInfo: null
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.order && !prevProps.order) {
-      this.initSocket();
+      this.setState({
+        formStep: null,
+        processStep: orderProcessSteps.searching
+      }, this.initSocket);
     }
   }
 
@@ -50,7 +61,7 @@ class Order extends React.Component {
     this.socket.emit('createRoom', id);
 
     this.socket.on('acceptedOrder', driverInfo => {
-      this.setState({ isAccepted: true, driverInfo });
+      this.setState({ isAccepted: true, searchingOrder: false, driverInfo });
     });
 
     this.socket.on('orderFinished', async () => {
@@ -58,11 +69,15 @@ class Order extends React.Component {
     });
   }
 
-  goToStep = step => this.setState({ step });
+  componentWillUnmount() {
+    this.socket.close();
+  }
 
-  onBack = () => this.setState(({ step }) => ({ step: step - 1 }));
+  goToFormStep = formStep => this.setState({ formStep });
 
-  onContinue = values => this.setState(({ step }) => ({ step: step + 1, ...values }));
+  onFormBack = () => this.setState(({ formStep }) => ({ formStep: formStep - 1 }));
+
+  onFormContinue = values => this.setState(({ formStep }) => ({ formStep: formStep + 1, ...values }));
 
   onSubmit = () => {
     const {
@@ -82,7 +97,7 @@ class Order extends React.Component {
     });
   };
 
-  getStepComponent = step => {
+  getFormStepComponent(formStep) {
     const {
       volumeWeight,
       cargoType,
@@ -93,14 +108,14 @@ class Order extends React.Component {
     } = this.state;
     const { loading } = this.props;
 
-    switch (step) {
-      case orderSteps.cargoParams:
+    switch (formStep) {
+      case orderFormSteps.cargoParams:
         return <CargoParamsForm
           volumeWeight={volumeWeight}
           cargoType={cargoType}
-          onContinue={this.onContinue}
+          onContinue={this.onFormContinue}
         />;
-      case orderSteps.transportType:
+      case orderFormSteps.transportType:
         if (!vehicleTypes) {
           getVehicleTypes().then(vehicleTypes => this.setState({ vehicleTypes }));
 
@@ -110,17 +125,17 @@ class Order extends React.Component {
         return <TransportTypeForm
           vehicleTypeId={vehicleTypeId}
           vehicleTypes={vehicleTypes}
-          onBack={this.onBack}
-          onContinue={this.onContinue}
+          onBack={this.onFormBack}
+          onContinue={this.onFormContinue}
         />;
-      case orderSteps.routePoints:
+      case orderFormSteps.routePoints:
         return <RoutePointsForm
           fromPoint={fromPoint}
           toPoint={toPoint}
-          onBack={this.onBack}
-          onContinue={this.onContinue}
+          onBack={this.onFormBack}
+          onContinue={this.onFormContinue}
         />;
-      case orderSteps.confirmation:
+      case orderFormSteps.confirmation:
         return <ConfirmOrder
           volumeWeight={volumeWeight}
           cargoType={cargoType}
@@ -128,32 +143,61 @@ class Order extends React.Component {
           fromAddress={fromPoint.address}
           toAddress={toPoint.address}
           loading={loading}
-          onBack={this.onBack}
+          onBack={this.onFormBack}
           onConfirm={this.onSubmit}
         />;
       default:
         return <CargoParamsForm
           volumeWeight={volumeWeight}
           cargoType={cargoType}
-          onContinue={this.onContinue}
+          onContinue={this.onFormContinue}
         />;
+    }
+  }
+
+  getProcessStepComponent = (processStep) => {
+    switch (processStep) {
+      case orderProcessSteps.searching:
+        return (
+          <div className={styles.searchingLoaderContainer}>
+            <Loader indeterminate active inline="centered">Searching for a driver...</Loader>
+          </div>
+        );
+      case orderProcessSteps.inProcess:
+        return 'In Process Component';
+      case orderProcessSteps.finished:
+        return 'Finished component';
+      default:
+        return (
+          <div className={styles.searchingLoaderContainer}>
+            <Loader indeterminate active inline="centered">Searching for a driver...</Loader>
+          </div>
+        );
     }
   };
 
   render() {
-    const { step, volumeWeight, transportType } = this.state;
-    const stepComponent = this.getStepComponent(step);
+    const {
+      formStep,
+      processStep,
+      volumeWeight,
+      transportType,
+    } = this.state;
+
+    const stepComponent = formStep !== null
+      ? this.getFormStepComponent(formStep)
+      : this.getProcessStepComponent(processStep);
 
     return (
       <div className={styles.orderContainer}>
         <Header as="h2" attached="top">Your Order</Header>
         {stepComponent}
-        {step !== orderSteps.confirmation && (
+        {formStep !== null && formStep !== orderFormSteps.confirmation && (
           <Step.Group attached="bottom" size="mini">
             <Step
               link
-              active={step === orderSteps.cargoParams}
-              onClick={() => this.goToStep(orderSteps.cargoParams)}
+              active={formStep === orderFormSteps.cargoParams}
+              onClick={() => this.goToFormStep(orderFormSteps.cargoParams)}
             >
               <Icon name="boxes" />
               <Step.Content>
@@ -165,8 +209,8 @@ class Order extends React.Component {
             <Step
               link
               disabled={!volumeWeight}
-              active={step === orderSteps.transportType}
-              onClick={() => this.goToStep(orderSteps.transportType)}
+              active={formStep === orderFormSteps.transportType}
+              onClick={() => this.goToFormStep(orderFormSteps.transportType)}
             >
               <Icon name="truck" />
               <Step.Content>
@@ -178,8 +222,8 @@ class Order extends React.Component {
             <Step
               link
               disabled={!volumeWeight || !transportType}
-              active={step === orderSteps.routePoints}
-              onClick={() => this.goToStep(orderSteps.routePoints)}
+              active={formStep === orderFormSteps.routePoints}
+              onClick={() => this.goToFormStep(orderFormSteps.routePoints)}
             >
               <Icon name="map marker alternate" />
               <Step.Content>
