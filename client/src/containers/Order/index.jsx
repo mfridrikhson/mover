@@ -7,9 +7,10 @@ import CargoParamsForm from '../../components/CargoParamsForm';
 import TransportTypeForm from '../../components/TransportTypeForm';
 import RoutePointsForm from '../../components/RoutePointsForm';
 import ConfirmOrder from '../../components/ConfirmOrder';
+import Spinner from '../../components/Spinner';
 import { submitOrder } from '../../routines';
-import { socketInit } from '../../helpers/socketInitHelper';
 
+import { socketInit } from '../../helpers/socketInitHelper';
 import styles from './styles.module.scss';
 import { getVehicleTypes } from '../../services/vehicleTypeService';
 
@@ -31,10 +32,10 @@ class Order extends React.Component {
     super(props);
 
     this.state = {
-      /*formStep: orderFormSteps.cargoParams,
-      processStep: null,*/
-      formStep: null,
-      processStep: orderProcessSteps.searching,
+      formStep: orderFormSteps.cargoParams,
+      processStep: null,
+      /*formStep: null,
+      processStep: orderProcessSteps.searching,*/
       volumeWeight: '',
       cargoType: '',
       vehicleTypeId: '',
@@ -60,7 +61,7 @@ class Order extends React.Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('acceptedOrder', driverInfo => {
+    this.socket.on('acceptOrder', driverInfo => {
       this.setState({ isAccepted: true, searchingOrder: false, driverInfo });
     });
 
@@ -93,8 +94,11 @@ class Order extends React.Component {
       cargoType,
       vehicleTypeId,
       fromPoint,
-      toPoint
+      toPoint,
+      status: 'Pending'
     });
+
+    this.setState({ formStep: null, processStep: orderProcessSteps.searching });
   };
 
   getFormStepComponent(formStep) {
@@ -168,11 +172,7 @@ class Order extends React.Component {
       case orderProcessSteps.finished:
         return 'Finished component';
       default:
-        return (
-          <div className={styles.searchingLoaderContainer}>
-            <Loader indeterminate active inline="centered">Searching for a driver...</Loader>
-          </div>
-        );
+        return <Spinner text="Searching for a driver..."/>;
     }
   };
 

@@ -1,0 +1,35 @@
+:local(.orderListContainer) {
+  max-height: calc(100vh - 3.5em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  float: right;
+  margin-left: 0.75em;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #a8a8a8;
+  background-color: white;
+  z-index: 100;
+
+  :local(h2) {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  :local(.availableOrderGrid) {
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));;
+    justify-content: center;
+    align-items: start;
+    gap: 1em;
+    padding: 1em;
+
+    :global(.ui.card) {
+      margin: 0;
+    }
+  }
+
+  :local(.currentOrder):global(.ui.card) {
+    margin: 1em;
+  }
+}
