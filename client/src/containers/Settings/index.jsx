@@ -45,6 +45,7 @@ class Settings extends React.Component {
               id={id}
               firstName={firstName}
               lastName={lastName}
+              loading={loading}
             />
           </Tab.Pane>
         )
@@ -104,7 +105,7 @@ Settings.propTypes = {
 const mapStateToProps = ({ profile: { user, driver, loading } }) => ({
   user,
   driver,
-  loading,
+  loading
 });
 
 const mapDispatchToProps = {

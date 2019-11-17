@@ -16,26 +16,32 @@ const OrderInfo = ({ volumeWeight, cargoType, fromAddress, transportType, toAddr
             {`${volumeWeight} kg`}
           </Table.Cell>
         </Table.Row>
-        {cargoType && (
-          <Table.Row>
-            <Table.Cell>
+        {cargoType
+          ? (
+            <Table.Row>
+              <Table.Cell>
               Cargo type
-            </Table.Cell>
-            <Table.Cell>
-              {cargoType}
-            </Table.Cell>
-          </Table.Row>
-        )}
-        {transportType && (
-          <Table.Row>
-            <Table.Cell>
+              </Table.Cell>
+              <Table.Cell>
+                {cargoType}
+              </Table.Cell>
+            </Table.Row>
+          )
+          : null
+        }
+        {transportType
+          ? (
+            <Table.Row>
+              <Table.Cell>
               Transport type
-            </Table.Cell>
-            <Table.Cell>
-              {transportType}
-            </Table.Cell>
-          </Table.Row>
-        )}
+              </Table.Cell>
+              <Table.Cell>
+                {transportType}
+              </Table.Cell>
+            </Table.Row>
+          )
+          : null
+        }
         <Table.Row>
           <Table.Cell>
             Depart from

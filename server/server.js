@@ -9,22 +9,20 @@ const socketIO = require('socket.io');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const routesWhiteList = require('./config/routes-white-list.config');
 const setupRoutesForApp = require('./api/routes');
-const { defaultSocketInjector, driversSocketInjector } = require('./socket/injector');
-const { defaultHandlers, driverHandlers } = require('./socket/handlers');
+const socketInjector = require('./socket/injector');
+const socketHandlers = require('./socket/handlers');
 
 const app = new Koa();
 
 const socketServer = http.Server(app.callback());
 const io = socketIO(socketServer);
-io.on('connection', defaultHandlers);
-const driversNsp = io.of('/drivers').on('connection', driverHandlers);
+io.on('connection', socketHandlers);
 
 app.use(bodyparser());
 app.use(passport.initialize());
 app.use(authorizationMiddleware(routesWhiteList));
 
-app.use(defaultSocketInjector(io));
-app.use(driversSocketInjector(driversNsp));
+app.use(socketInjector(io));
 
 setupRoutesForApp(app);
 

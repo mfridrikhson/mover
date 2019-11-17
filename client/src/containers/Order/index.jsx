@@ -9,10 +9,11 @@ import RoutePointsForm from '../../components/RoutePointsForm';
 import ConfirmOrder from '../../components/ConfirmOrder';
 import Spinner from '../../components/Spinner';
 import { submitOrder } from '../../routines';
-
 import { socketInit } from '../../helpers/socketInitHelper';
-import styles from './styles.module.scss';
 import { getVehicleTypes } from '../../services/vehicleTypeService';
+
+import styles from './styles.module.scss';
+import DriverInfo from '../../components/DriverInfo';
 
 const orderFormSteps = {
   cargoParams: 0,
@@ -35,7 +36,7 @@ class Order extends React.Component {
       formStep: orderFormSteps.cargoParams,
       processStep: null,
       /*formStep: null,
-      processStep: orderProcessSteps.searching,*/
+      processStep: orderProcessSteps.inProcess,*/
       volumeWeight: '',
       cargoType: '',
       vehicleTypeId: '',
@@ -61,12 +62,13 @@ class Order extends React.Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('acceptOrder', driverInfo => {
-      this.setState({ isAccepted: true, searchingOrder: false, driverInfo });
+    this.socket.on('orderAccepted', driverInfo => {
+      console.log(driverInfo);
+      this.setState({ processStep: orderProcessSteps.inProcess, driverInfo });
     });
 
     this.socket.on('orderFinished', async () => {
-      this.setState({ isAccepted: false, driverInfo: null });
+      this.setState({ processStep: null, driverInfo: null });
     });
   }
 
@@ -162,17 +164,13 @@ class Order extends React.Component {
   getProcessStepComponent = (processStep) => {
     switch (processStep) {
       case orderProcessSteps.searching:
-        return (
-          <div className={styles.searchingLoaderContainer}>
-            <Loader indeterminate active inline="centered">Searching for a driver...</Loader>
-          </div>
-        );
+        return <Spinner text="Searching for a driver..."/>;
       case orderProcessSteps.inProcess:
-        return 'In Process Component';
+        return <DriverInfo driver={this.state.driverInfo}/>;
       case orderProcessSteps.finished:
         return 'Finished component';
       default:
-        return <Spinner text="Searching for a driver..."/>;
+        return null;
     }
   };
 
@@ -181,7 +179,7 @@ class Order extends React.Component {
       formStep,
       processStep,
       volumeWeight,
-      transportType,
+      vehicleTypeId,
     } = this.state;
 
     const stepComponent = formStep !== null
@@ -221,7 +219,7 @@ class Order extends React.Component {
 
             <Step
               link
-              disabled={!volumeWeight || !transportType}
+              disabled={!volumeWeight || !vehicleTypeId}
               active={formStep === orderFormSteps.routePoints}
               onClick={() => this.goToFormStep(orderFormSteps.routePoints)}
             >

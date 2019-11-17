@@ -7,6 +7,12 @@ const {
   deleteById,
   updateById
 } = require('../../data/queries/drivers.query');
+const {
+  getById: getVehicleById
+} = require('../../data/queries/vehicles.query');
+const {
+  getById: getVehicleTypeById,
+} = require('../../data/queries/vehicleTypes.query');
 
 const getAllDrivers = async () => {
   try {
@@ -26,7 +32,16 @@ const getDriverById = async (id) => {
 
 const getDriverByUserId = async (userId) => {
   try {
-    return await getByUserId(userId);
+    const driver = await getByUserId(userId);
+    const currentVehicle = await getVehicleById(driver.currentVehicleId);
+    const { type: vehicleType } = await getVehicleTypeById(currentVehicle.vehicleTypeId);
+    return {
+      ...driver,
+      currentVehicle: {
+        ...currentVehicle,
+        vehicleType
+      }
+    };
   } catch (err) {
     throw err;
   }

@@ -1,9 +1,12 @@
 import React from 'react';
-import { socketInit } from '../../helpers/socketInitHelper';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button, Card, Header, Icon } from 'semantic-ui-react';
 
 import Spinner from '../../components/Spinner';
 import OrderInfo from '../../components/OrderInfo';
+import RatingLabel from '../../components/RatingLabel';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
 
@@ -24,7 +27,8 @@ class AvailableOrdersList extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = socketInit('drivers');
+    const isDriver = true;
+    this.socket = socketInit(isDriver);
 
     this.socket.on('allOrders', ({ orders }) => {
       this.setState({ orders });
@@ -87,7 +91,7 @@ class AvailableOrdersList extends React.Component {
               <Card.Content>
                 <Card.Header>{currentOrder.customer.firstName} {currentOrder.customer.lastName}</Card.Header>
                 <Card.Meta>
-                  <Icon name="star" color="yellow" /> {currentOrder.customer.rating === null ? 'N/A' : currentOrder.customer.rating}
+                  <RatingLabel rating={currentOrder.customer.rating}/>
                 </Card.Meta>
                 <Card.Description>
                   <OrderInfo
@@ -101,11 +105,21 @@ class AvailableOrdersList extends React.Component {
             </Card>
           </>
         );
+      default:
+        return null;
     }
   }
 
-  onAcceptOrder = (orderId) => {
-    this.socket.emit('acceptOrder', orderId);
+  onAcceptOrder = orderId => {
+    this.socket.emit('joinRoom', orderId);
+    this.socket.emit('acceptOrder', {
+      orderId,
+      driver: {
+        ...this.props.driver,
+        ...this.props.user
+      }
+    });
+
     this.setState({
       orderStep: orderProcessSteps.inProcess,
       currentOrder: this.state.orders.find(({ id }) => id === orderId)
@@ -121,4 +135,28 @@ class AvailableOrdersList extends React.Component {
   }
 }
 
-export default AvailableOrdersList;
+AvailableOrdersList.propTypes = {
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    rating: PropTypes.number
+  }).isRequired,
+  driver: PropTypes.shape({
+    currentVehicle: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      registrationPlate: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      photoUrl: PropTypes.string.isRequired,
+      techPassportUrl: PropTypes.string.isRequired,
+      vehicleType: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired
+};
+
+const mapStateToProps = ({ profile: { user, driver } }) => ({
+  user,
+  driver
+});
+
+export default connect(mapStateToProps)(AvailableOrdersList);

@@ -9,7 +9,7 @@ const {
 } = require('../../data/queries/vehicles.query');
 
 const getAllVehicles = async () => {
-  try{
+  try {
     return await getAll();
   } catch (err) {
     throw err;
@@ -18,7 +18,7 @@ const getAllVehicles = async () => {
 
 const getVehicleById = async (id) => {
   try {
-    return await  getById(id);
+    return await getById(id);
   } catch (err) {
     throw err;
   }

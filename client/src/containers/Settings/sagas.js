@@ -48,7 +48,7 @@ function* updateUserRequest({ payload }) {
   try {
     const user = yield call(userService.updateUser, payload);
 
-    yield put(fetchUser.success(user));
+    yield put(fetchUser.success({ user }));
   } catch (error) {
     yield put(fetchUser.failure(error.message));
   } finally {

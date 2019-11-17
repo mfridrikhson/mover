@@ -1,0 +1,18 @@
+$labelSideSize: 13px;
+
+:local(.driverInfoContainer) {
+  margin: 1em;
+
+  :local(.colorLabel) {
+    margin-right: 0.3em;
+    display: inline-block;
+    height: $labelSideSize;
+    width: $labelSideSize;
+    border-radius: 50%;
+  }
+
+  :local(.registrationPlate) {
+    float: right;
+    font-weight: initial;
+  }
+}

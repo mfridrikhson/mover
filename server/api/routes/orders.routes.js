@@ -50,7 +50,7 @@ router.post('/', async (ctx) => {
     if (order) {
       ctx.status = 201;
       ctx.body = order;
-      ctx.driversNsp.emit('newOrder', {
+      ctx.io.to('drivers').emit('newOrder', {
         ...order,
         customer: ctx.user
       });
