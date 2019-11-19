@@ -9,7 +9,7 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().max(250).required('Last name is required')
 });
 
-const UserInfoForm = ({ id, firstName, lastName, onSubmit }) => (
+const UserInfoForm = ({ id, firstName, lastName, loading, onSubmit }) => (
   <Formik
     initialValues={{
       id,
@@ -47,6 +47,7 @@ const UserInfoForm = ({ id, firstName, lastName, onSubmit }) => (
           primary
           fluid
           type="submit"
+          loading={loading}
           disabled={!!(
             errors.firstName || errors.lastName
               || (values.firstName.trim() === firstName && values.lastName.trim() === lastName
@@ -63,6 +64,7 @@ UserInfoForm.propTypes = {
   id: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
 

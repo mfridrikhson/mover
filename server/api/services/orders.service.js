@@ -5,6 +5,7 @@ const {
   deleteById,
   updateById
 } = require('../../data/queries/orders.query');
+const { getById: getUserById } = require('../../data/queries/users.query');
 
 const {
   fromJson,
@@ -14,7 +15,9 @@ const {
 
 const getAllOrders = async (filters) => {
   try {
-    return await getAll(filters).map(order => toJson(order));
+    const orders = await getAll(filters).map(order => toJson(order));
+    const orderCustomers = await Promise.all(orders.map(({ customerId }) => getUserById(customerId)));
+    return orders.map((order, idx) => ({ ...order, customer: orderCustomers[idx] }));
   } catch (err) {
     throw err;
   }
@@ -22,7 +25,12 @@ const getAllOrders = async (filters) => {
 
 const getOrderById = async (id) => {
   try {
-    return toJson(await getById(id));
+    const order = toJson(await getById(id));
+    const orderCustomer = await getUserById(order.customerId);
+    return {
+      ...order,
+      customer: orderCustomer
+    };
   } catch (err) {
     throw err;
   }
@@ -47,7 +55,8 @@ const deleteOrderById = async (id) => {
 
 const updateOrderById = async (id, order) => {
   try {
-    return await updateById(id, fromJson(order)).map(order => toJson(order));
+    return await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)
+      .map(order => toJson(order));
   } catch (err) {
     throw err;
   }

@@ -6,7 +6,7 @@ const {
   updateById
 } = require('../../data/queries/users.query');
 
-const { addDriver } = require('../services/drivers.service');
+const { getDriverByUserId, addDriver } = require('../services/drivers.service');
 
 const getAllUsers = async () => {
   try {
@@ -20,8 +20,8 @@ const getUserById = async (id) => {
   try {
     const user = await getById(id);
     if (user.isDriver) {
-      const [createdDriver] = await addDriver({ userId: user.id });
-      return { user, driver: createdDriver };
+      const driver = await getDriverByUserId(user.id);
+      return { user, driver };
     }
     return { user };
   } catch (err) {
@@ -32,7 +32,6 @@ const getUserById = async (id) => {
 const addUser = async (user) => {
   try {
     const [createdUser] = await add(user);
-    console.log(createdUser);
     if (createdUser.isDriver) {
       const [createdDriver] = await addDriver({ userId: createdUser.id });
       return { user: createdUser, driver: createdDriver };

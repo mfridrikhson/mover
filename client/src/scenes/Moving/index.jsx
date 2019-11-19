@@ -1,23 +1,45 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Icon, Menu, Modal, Sidebar } from 'semantic-ui-react';
 
 import Map from '../../containers/Map';
 import Order from '../../containers/Order';
+import AvailableOrdersList from '../../containers/AvailableOrdersList';
 import ProfileInfo from '../../containers/Settings';
 
 import styles from  './styles.module.scss';
 
-const Moving = () => {
+const Moving = ({ isDriver, order }) => {
   const [isSidebarOpened, setSidebarOpened] = useState(false);
+  const [socket, setSocket] = useState(null);
+
   const logOut = () => {
     localStorage.removeItem('token');
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   };
 
+  const onPositionChange = ({ lat, lng }) => {
+    const { lat: deliverLat, lng: deliverLng } = order.toPoint.coords;
+    if (order) {
+      socket.emit('newRoutePoint', { orderId: order.id, lat, lng });
+      if (Math.abs(deliverLat - lat) < 0.01 && Math.abs(deliverLng - lng) < 0.01) {
+        socket.emit('orderFinished', { orderId: order.id });
+        socket.close();
+      }
+    }
+  };
+
   return (
     <>
-      <Map/>
+      <Map
+        partnerPoint={!isDriver ? order && order.partnerPoint : null}
+        departPoint={order && order.fromPoint.coords}
+        deliverPoint={order && order.toPoint.coords}
+        isDriver={isDriver}
+        onPositionChange={onPositionChange}
+      />
 
       <div className={styles.controlsContainer}>
         <Icon
@@ -26,7 +48,12 @@ const Moving = () => {
           name="bars"
           onClick={() => setSidebarOpened(true)}
         />
-        <Order/>
+        {isDriver
+          ? <AvailableOrdersList
+            setSocket={setSocket}
+          />
+          : <Order/>
+        }
       </div>
 
       <Sidebar
@@ -41,7 +68,6 @@ const Moving = () => {
       >
         <Modal
           size="small"
-          scrolling
           trigger={
             <Menu.Item link onClick={() => setSidebarOpened(false)}>
               <Icon name="cog"/>
@@ -65,4 +91,20 @@ const Moving = () => {
   );
 };
 
-export default Moving;
+Moving.propTypes = {
+  isDriver: PropTypes.bool.isRequired,
+  order: PropTypes.object
+};
+
+const mapStateToProps = ({
+  profile: {
+    user: {
+      isDriver
+    }
+  },
+  order: {
+    order
+  }
+}) => ({ isDriver, order });
+
+export default connect(mapStateToProps)(Moving);

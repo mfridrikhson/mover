@@ -13,20 +13,23 @@ const socketInjector = require('./socket/injector');
 const socketHandlers = require('./socket/handlers');
 
 const app = new Koa();
+
 const socketServer = http.Server(app.callback());
 const io = socketIO(socketServer);
 io.on('connection', socketHandlers);
 
 app.use(bodyparser());
-app.use(socketInjector(io));
 app.use(passport.initialize());
 app.use(authorizationMiddleware(routesWhiteList));
+
+app.use(socketInjector(io));
+
 setupRoutesForApp(app);
 
 const server = app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server listening on port: ${process.env.PORT}`);
 });
-// socketServer.listen(server);
+socketServer.listen(server);
 
 module.exports = server;
