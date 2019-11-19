@@ -55,7 +55,8 @@ const deleteOrderById = async (id) => {
 
 const updateOrderById = async (id, order) => {
   try {
-    return await updateById(id, fromJson(order)).map(order => toJson(order));
+    return await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)
+      .map(order => toJson(order));
   } catch (err) {
     throw err;
   }

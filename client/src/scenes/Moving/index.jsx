@@ -10,17 +10,31 @@ import ProfileInfo from '../../containers/Settings';
 
 import styles from  './styles.module.scss';
 
-const Moving = ({ isDriver }) => {
+const Moving = ({ isDriver, order }) => {
   const [isSidebarOpened, setSidebarOpened] = useState(false);
+  const [socket, setSocket] = useState(null);
+
   const logOut = () => {
     localStorage.removeItem('token');
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   };
 
+  const onPositionChange = ({ lat, lng }) => {
+    if (order) {
+      socket.emit('newRoutePoint', { orderId: order.id, lat, lng });
+    }
+  };
+
   return (
     <>
-      <Map/>
+      <Map
+        partnerPoint={!isDriver ? order && order.partnerPoint : null}
+        departPoint={order && order.fromPoint.coords}
+        deliverPoint={order && order.toPoint.coords}
+        isDriver={isDriver}
+        onPositionChange={onPositionChange}
+      />
 
       <div className={styles.controlsContainer}>
         <Icon
@@ -30,7 +44,9 @@ const Moving = ({ isDriver }) => {
           onClick={() => setSidebarOpened(true)}
         />
         {isDriver
-          ? <AvailableOrdersList/>
+          ? <AvailableOrdersList
+            setSocket={setSocket}
+          />
           : <Order/>
         }
       </div>
@@ -71,9 +87,19 @@ const Moving = ({ isDriver }) => {
 };
 
 Moving.propTypes = {
-  isDriver: PropTypes.bool.isRequired
+  isDriver: PropTypes.bool.isRequired,
+  order: PropTypes.object
 };
 
-const mapStateToProps = ({ profile: { user: { isDriver } } }) => ({ isDriver });
+const mapStateToProps = ({
+  profile: {
+    user: {
+      isDriver
+    }
+  },
+  order: {
+    order
+  }
+}) => ({ isDriver, order });
 
 export default connect(mapStateToProps)(Moving);

@@ -7,6 +7,7 @@ import Spinner from '../../components/Spinner';
 import OrderInfo from '../../components/OrderInfo';
 import RatingLabel from '../../components/RatingLabel';
 import { socketInit } from '../../helpers/socketInitHelper';
+import { submitOrder } from '../../routines';
 
 import styles from './styles.module.scss';
 
@@ -29,6 +30,7 @@ class AvailableOrdersList extends React.Component {
   componentDidMount() {
     const isDriver = true;
     this.socket = socketInit(isDriver);
+    this.props.setSocket(this.socket);
 
     this.socket.on('allOrders', ({ orders }) => {
       this.setState({ orders });
@@ -57,29 +59,31 @@ class AvailableOrdersList extends React.Component {
             <Header as="h2" attached="top">Pending orders</Header>
             {orders === null
               ? <Spinner text="Getting orders..."/>
-              : (
-                <div className={styles.availableOrderGrid}>
-                  {orders.map(({ customer, ...order }) => (
-                    <Card key={order.id}>
-                      <Card.Content>
-                        <Card.Header>{customer.firstName} {customer.lastName}</Card.Header>
-                        <Card.Meta>
-                          <Icon name="star" color="yellow" /> {customer.rating === null ? 'N/A' : customer.rating}
-                        </Card.Meta>
-                        <Card.Description>
-                          <OrderInfo
-                            volumeWeight={order.volumeWeight}
-                            cargoType={order.cargoType}
-                            fromAddress={order.fromPoint.address}
-                            toAddress={order.toPoint.address}
-                          />
-                          <Button onClick={() => this.onAcceptOrder(order.id)} fluid primary>Accept</Button>
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </div>
-              )
+              : orders.length > 0
+                ? (
+                  <div className={styles.availableOrderGrid}>
+                    {orders.map(({ customer, ...order }) => (
+                      <Card key={order.id}>
+                        <Card.Content>
+                          <Card.Header>{customer.firstName} {customer.lastName}</Card.Header>
+                          <Card.Meta>
+                            <Icon name="star" color="yellow" /> {customer.rating === null ? 'N/A' : customer.rating}
+                          </Card.Meta>
+                          <Card.Description>
+                            <OrderInfo
+                              volumeWeight={order.volumeWeight}
+                              cargoType={order.cargoType}
+                              fromAddress={order.fromPoint.address}
+                              toAddress={order.toPoint.address}
+                            />
+                            <Button onClick={() => this.onAcceptOrder(order.id)} fluid primary>Accept</Button>
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </div>
+                )
+                : <div className={styles.noOrders}>No orders available currently :(</div>
             }
           </>
         );
@@ -120,6 +124,8 @@ class AvailableOrdersList extends React.Component {
       }
     });
 
+    this.props.acceptOrder(this.state.orders.find(({ id }) => id === orderId));
+
     this.setState({
       orderStep: orderProcessSteps.inProcess,
       currentOrder: this.state.orders.find(({ id }) => id === orderId)
@@ -151,7 +157,9 @@ AvailableOrdersList.propTypes = {
       techPassportUrl: PropTypes.string.isRequired,
       vehicleType: PropTypes.string.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  acceptOrder: PropTypes.func.isRequired,
+  setSocket: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ profile: { user, driver } }) => ({
@@ -159,4 +167,8 @@ const mapStateToProps = ({ profile: { user, driver } }) => ({
   driver
 });
 
-export default connect(mapStateToProps)(AvailableOrdersList);
+const mapDispatchToProps = {
+  acceptOrder: submitOrder.success
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AvailableOrdersList);

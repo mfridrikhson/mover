@@ -29,6 +29,12 @@
     }
   }
 
+  :local(.noOrders) {
+    font-size: 125%;
+    text-align: center;
+    padding: 2em 5em;
+  }
+
   :local(.currentOrder):global(.ui.card) {
     margin: 1em;
   }

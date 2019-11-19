@@ -69,7 +69,7 @@ class Settings extends React.Component {
                 vehicleTypes={vehicleTypes}
                 onChangeVehicle={(data) => console.log(data)}
                 onLoadLicense={updateDriver}
-                onAddVehicle={addVehicle}
+                onAddVehicle={(data) => addVehicle({ ...data, driverId: driver.id })}
               />
             </Tab.Pane>
           );

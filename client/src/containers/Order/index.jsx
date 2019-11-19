@@ -57,13 +57,17 @@ class Order extends React.Component {
   }
 
   initSocket() {
-    this.socket = socketInit();
-    const { order: { id } } = this.props;
+    const { order, setOrder } = this.props;
 
-    this.socket.emit('createRoom', id);
+    this.socket = socketInit();
+
+    this.socket.emit('createRoom', order.id);
+
+    this.socket.on('newRoutePoint', newPoint => {
+      setOrder({ ...order, partnerPoint: newPoint });
+    });
 
     this.socket.on('orderAccepted', driverInfo => {
-      console.log(driverInfo);
       this.setState({ processStep: orderProcessSteps.inProcess, driverInfo });
     });
 
@@ -239,7 +243,8 @@ class Order extends React.Component {
 Order.propTypes = {
   order: PropTypes.object,
   loading: PropTypes.bool.isRequired,
-  submitOrder: PropTypes.func.isRequired
+  submitOrder: PropTypes.func.isRequired,
+  setOrder: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ order: { order, loading } }) => ({
@@ -248,7 +253,8 @@ const mapStateToProps = ({ order: { order, loading } }) => ({
 });
 
 const mapDispatchToProps = {
-  submitOrder
+  submitOrder,
+  setOrder: submitOrder.success
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Order);
