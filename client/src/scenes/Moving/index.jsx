@@ -21,8 +21,13 @@ const Moving = ({ isDriver, order }) => {
   };
 
   const onPositionChange = ({ lat, lng }) => {
+    const { lat: deliverLat, lng: deliverLng } = order.toPoint.coords;
     if (order) {
       socket.emit('newRoutePoint', { orderId: order.id, lat, lng });
+      if (Math.abs(deliverLat - lat) < 0.01 && Math.abs(deliverLng - lng) < 0.01) {
+        socket.emit('orderFinished', { orderId: order.id });
+        socket.close();
+      }
     }
   };
 

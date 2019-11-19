@@ -139,7 +139,7 @@ class Map extends React.Component {
             {isDriver ? <MoonRoverSVG className={styles.marker}/> : <AstronautSVG className={styles.marker}/>}
           </Marker>
         )}
-        {isDriver && departPoint && (
+        {departPoint && (
           <Marker
             latitude={departPoint.lat}
             longitude={departPoint.lng}
@@ -150,7 +150,7 @@ class Map extends React.Component {
             <span className={styles.departDeliver}>A</span>
           </Marker>
         )}
-        {isDriver && deliverPoint && (
+        {deliverPoint && (
           <Marker
             latitude={deliverPoint.lat}
             longitude={deliverPoint.lng}

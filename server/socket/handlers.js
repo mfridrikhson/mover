@@ -27,6 +27,11 @@ const addDriverHandlers = socket => {
     socket.to(orderId).emit('orderAccepted', driver);
     await updateOrderById(orderId, { status: 'Accepted' });
   });
+
+  socket.on('orderFinished', ({ orderId }) => {
+    socket.to(orderId).emit('orderFinished');
+    socket.emit('orderFinished');
+  });
 };
 
 const addPositionHandlers = socket => {

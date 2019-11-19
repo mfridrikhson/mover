@@ -10,6 +10,8 @@ import { socketInit } from '../../helpers/socketInitHelper';
 import { submitOrder } from '../../routines';
 
 import styles from './styles.module.scss';
+import RatingForm from '../../components/RatingForm';
+import { setUserRating } from '../../services/userService';
 
 const orderProcessSteps = {
   selecting: 0,
@@ -17,14 +19,16 @@ const orderProcessSteps = {
   finished: 2
 };
 
+const initialState = {
+  orders: null,
+  orderStep: orderProcessSteps.selecting
+};
+
 class AvailableOrdersList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      orders: null,
-      orderStep: orderProcessSteps.selecting
-    };
+    this.state = initialState;
   }
 
   componentDidMount() {
@@ -41,7 +45,7 @@ class AvailableOrdersList extends React.Component {
     });
 
     this.socket.on('orderFinished', async () => {
-      this.setState({ isAccepted: false, driverInfo: null });
+      this.setState({ orderStep: orderProcessSteps.finished });
     });
   }
 
@@ -109,10 +113,17 @@ class AvailableOrdersList extends React.Component {
             </Card>
           </>
         );
+      case orderProcessSteps.finished:
+        return <RatingForm onSubmit={this.onSubmitRating} isDriver={true}/>;
       default:
         return null;
     }
   }
+
+  onSubmitRating = async (event, { rating }) => {
+    await setUserRating({ userId: this.state.currentOrder.customer.id, rating });
+    this.setState(initialState);
+  };
 
   onAcceptOrder = orderId => {
     this.socket.emit('joinRoom', orderId);

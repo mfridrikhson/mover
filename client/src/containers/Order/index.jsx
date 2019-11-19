@@ -8,12 +8,14 @@ import TransportTypeForm from '../../components/TransportTypeForm';
 import RoutePointsForm from '../../components/RoutePointsForm';
 import ConfirmOrder from '../../components/ConfirmOrder';
 import Spinner from '../../components/Spinner';
+import DriverInfo from '../../components/DriverInfo';
+import RatingForm from '../../components/RatingForm';
 import { submitOrder } from '../../routines';
-import { socketInit } from '../../helpers/socketInitHelper';
 import { getVehicleTypes } from '../../services/vehicleTypeService';
+import { setUserRating } from '../../services/userService';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
-import DriverInfo from '../../components/DriverInfo';
 
 const orderFormSteps = {
   cargoParams: 0,
@@ -28,23 +30,25 @@ const orderProcessSteps = {
   finished: 2
 };
 
+const initialState = {
+  formStep: orderFormSteps.cargoParams,
+  processStep: null,
+  /*formStep: null,
+  processStep: orderProcessSteps.inProcess,*/
+  volumeWeight: '',
+  cargoType: '',
+  vehicleTypeId: '',
+  vehicleTypes: null,
+  fromPoint: undefined,
+  toPoint: undefined,
+  driverInfo: null
+};
+
 class Order extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      formStep: orderFormSteps.cargoParams,
-      processStep: null,
-      /*formStep: null,
-      processStep: orderProcessSteps.inProcess,*/
-      volumeWeight: '',
-      cargoType: '',
-      vehicleTypeId: '',
-      vehicleTypes: null,
-      fromPoint: undefined,
-      toPoint: undefined,
-      driverInfo: null
-    };
+    this.state = initialState;
   }
 
   componentDidUpdate(prevProps) {
@@ -72,7 +76,8 @@ class Order extends React.Component {
     });
 
     this.socket.on('orderFinished', async () => {
-      this.setState({ processStep: null, driverInfo: null });
+      this.setState({ processStep: orderProcessSteps.finished });
+      this.socket.close();
     });
   }
 
@@ -165,6 +170,11 @@ class Order extends React.Component {
     }
   }
 
+  onSubmitRating = async (event, { rating }) => {
+    await setUserRating({ userId: this.state.driver.user.id, rating });
+    this.setState(initialState);
+  };
+
   getProcessStepComponent = (processStep) => {
     switch (processStep) {
       case orderProcessSteps.searching:
@@ -172,7 +182,10 @@ class Order extends React.Component {
       case orderProcessSteps.inProcess:
         return <DriverInfo driver={this.state.driverInfo}/>;
       case orderProcessSteps.finished:
-        return 'Finished component';
+        return <RatingForm
+          onSubmit={this.onSubmitRating}
+          isDriver={false}
+        />;
       default:
         return null;
     }
