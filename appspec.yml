@@ -13,3 +13,4 @@ hooks:
     - location: scripts/before-install.sh
   ApplicationStart:
     - location: scripts/app-start.sh
+      runas: ubuntu

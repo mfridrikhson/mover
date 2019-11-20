@@ -4,9 +4,6 @@ node_js:
 branches:
   only:
     - develop
-cache:
-  directories:
-    - node_modules
 install:
   - . scripts/install.sh
 script:
