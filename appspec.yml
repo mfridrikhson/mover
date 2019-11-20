@@ -3,3 +3,13 @@ os: linux
 files:
   - source: ./
     destination: /home/ubuntu/mover
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+hooks:
+  BeforeInstall:
+    - location: scripts/before-install.sh
+  ApplicationStart:
+    - location: scripts/app-start.sh

@@ -7,6 +7,10 @@ branches:
 cache:
   directories:
     - node_modules
+install:
+  - . scripts/install.sh
+script:
+  - . scripts/script.sh
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY_ID
@@ -28,8 +32,3 @@ deploy:
     deployment_group: mover_deployment_group
     region: us-west-2
     on: *2
-
-script:
-  - zip -r latest *
-  - mkdir -p dpl_cd_upload
-  - mv latest.zip dpl_cd_upload/latest.zip
