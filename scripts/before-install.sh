@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/mover/
+cd /home/ubuntu/
 rm -rf mover
