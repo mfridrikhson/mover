@@ -8,8 +8,6 @@ const passport = require('koa-passport');
 const http = require('http');
 const socketIO = require('socket.io');
 
-const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
-const routesWhiteList = require('./config/routes-white-list.config');
 const setupRoutesForApp = require('./api/routes');
 const socketInjector = require('./socket/injector');
 const socketHandlers = require('./socket/handlers');
@@ -22,7 +20,6 @@ io.on('connection', socketHandlers);
 
 app.use(bodyparser());
 app.use(passport.initialize());
-app.use(authorizationMiddleware(routesWhiteList));
 
 app.use(socketInjector(io));
 
