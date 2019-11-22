@@ -3,6 +3,7 @@ require('dotenv').config();
 const Koa = require('koa');
 const bodyparser = require('koa-bodyparser');
 const serve = require('koa-static');
+const mount = require('koa-mount');
 const path = require('path');
 const passport = require('koa-passport');
 const http = require('http');
@@ -30,7 +31,10 @@ setupRoutesForApp(app);
   staticPages.use(serve(__dirname + '../client/build')); //serve the build directory
   app.use(mount('/', staticPages));
 }*/
-app.use(serve(path.join(__dirname, '../client/build')));
+const staticPages = new Koa();
+staticPages.use(serve(path.join(__dirname, '../client/build')));
+app.use(mount('/', staticPages));
+//app.use(serve(path.join(__dirname, '../client/build')));
 
 const server = app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
