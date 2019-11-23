@@ -1,4 +1,4 @@
-# Mover - an application for convenient transportation.
+# Mover - an application for convenient transportation. ![Build info](https://travis-ci.com/TheSubliminal/mover.svg?branch=develop)
 
 Mover app is an application that gives ability for people to find a way to conveniently transport their cargo across the city. 
 ## Main functionality: 
