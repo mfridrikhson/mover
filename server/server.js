@@ -1,9 +1,9 @@
 require('./config/passport.config');
 require('dotenv').config();
 const Koa = require('koa');
+const fs = require('fs');
 const bodyparser = require('koa-bodyparser');
 const serve = require('koa-static');
-const mount = require('koa-mount');
 const path = require('path');
 const passport = require('koa-passport');
 const http = require('http');
@@ -26,15 +26,12 @@ app.use(socketInjector(io));
 
 setupRoutesForApp(app);
 
-/*if (process.env.NODE_ENV === 'production') {
-  const staticPages = new Koa();
-  staticPages.use(serve(__dirname + '../client/build')); //serve the build directory
-  app.use(mount('/', staticPages));
-}*/
-const staticPages = new Koa();
-staticPages.use(serve(path.join(__dirname, '../client/build')));
-app.use(mount('/', staticPages));
-//app.use(serve(path.join(__dirname, '../client/build')));
+app.use(serve(path.join(__dirname, '../client/build')));
+app.use(ctx => {
+  ctx.type = 'html';
+  ctx.body = fs.readFileSync(`${__dirname}/../client/build/index.html`);
+});
+
 
 const server = app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
