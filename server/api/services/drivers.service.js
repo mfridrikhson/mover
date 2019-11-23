@@ -33,14 +33,23 @@ const getDriverById = async (id) => {
 const getDriverByUserId = async (userId) => {
   try {
     const driver = await getByUserId(userId);
-    const currentVehicle = await getVehicleById(driver.currentVehicleId);
-    const { type: vehicleType } = await getVehicleTypeById(currentVehicle.vehicleTypeId);
+    let currentVehicle, vehicleType;
+
+    if (driver.currentVehicleId) {
+      currentVehicle = await getVehicleById(driver.currentVehicleId);
+      vehicleType = await getVehicleTypeById(currentVehicle.vehicleTypeId).type;
+    }
     return {
       ...driver,
-      currentVehicle: {
-        ...currentVehicle,
-        vehicleType
-      }
+      ...(currentVehicle
+        ?
+        {
+          currentVehicle: {
+            ...currentVehicle,
+            vehicleType
+          }
+        }
+        : {})
     };
   } catch (err) {
     throw err;
