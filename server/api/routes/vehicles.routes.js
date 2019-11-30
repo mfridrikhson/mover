@@ -16,87 +16,27 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const vehicle = await getVehicleById(ctx.params.id);
-    if (vehicle) {
-      ctx.body = vehicle;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getVehicleById(ctx.params.id);
 });
 
 router.get('/driver/:driverId', async (ctx) => {
-  try {
-    const vehicles = await getVehiclesByDriverId(ctx.params.driverId);
-    if (vehicles) {
-      ctx.body = vehicles;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getVehiclesByDriverId(ctx.params.driverId);
 });
 
 router.get('/type/:vehicleTypeId', async (ctx) => {
-  try {
-    const vehicles = await getVehiclesByVehicleTypeId(ctx.params.vehicleTypeId);
-    if (vehicles) {
-      ctx.body = vehicles;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'error occurred';
-  }
+  ctx.body = await getVehiclesByVehicleTypeId(ctx.params.vehicleTypeId);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const vehicle = await addVehicle(ctx.request.body);
-    if (vehicle) {
-      ctx.body = vehicle;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.bod = err.message || 'Error occurred';
-  }
+  ctx.body = await addVehicle(ctx.request.body);
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const vehicle = await deleteVehicleById(ctx.params.id);
-    if (vehicle) {
-      ctx.body = vehicle;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await deleteVehicleById(ctx.params.id);
 });
 
 router.put('/:id', async (ctx) => {
-  try {
-    const vehicle = await updateVehicleById(ctx.params.id, ctx.request.body);
-    if (vehicle) {
-      ctx.body = vehicle;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await updateVehicleById(ctx.params.id, ctx.request.body);
 });
 
 module.exports = router;

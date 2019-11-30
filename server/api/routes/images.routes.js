@@ -5,26 +5,12 @@ const { getImageById, upload } = require('../services/images.service');
 const imageMiddleware = require('../middlewares/image.middleware');
 
 router.get('/:id', async (ctx) => {
-  try {
-    ctx.body = await getImageById(ctx.request.params.id);
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getImageById(ctx.request.params.id);
 });
 
 router.post('/', imageMiddleware, async (ctx) => {
-  try {
-    const [image] = (await upload(ctx.request.file));
-    if (image) {
-      ctx.body = image;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [image] = (await upload(ctx.request.file));
+  ctx.body = image;
 });
 
 module.exports = router;

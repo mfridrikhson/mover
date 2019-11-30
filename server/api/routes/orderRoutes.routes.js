@@ -14,45 +14,17 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const orderRoute = await getOrderRouteById(ctx.params.id);
-    if (orderRoute) {
-      ctx.body = orderRoute;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getOrderRouteById(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const [orderRoute] = await addOrderRoute(ctx.request.body);
-    if (orderRoute) {
-      ctx.body = orderRoute;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [orderRoute] = await addOrderRoute(ctx.request.body);
+  ctx.body = orderRoute;
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [orderRoute] = await deleteOrderRouteById(ctx.params.id);
-    if (orderRoute) {
-      ctx.body = orderRoute;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [orderRoute] = await deleteOrderRouteById(ctx.params.id);
+  ctx.body = orderRoute;
 });
 
 router.put('/:id', async (ctx) => {

@@ -14,59 +14,22 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const bill = await getBillById(ctx.params.id);
-    if (bill) {
-      ctx.body = bill;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getBillById(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const [bill] = await addBill(ctx.request.body);
-    if (bill) {
-      ctx.body = bill;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [bill] = await addBill(ctx.request.body);
+  ctx.body = bill;
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [bill] = await deleteBillById(ctx.params.id);
-    if (bill) {
-      ctx.body = bill;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [bill] = await deleteBillById(ctx.params.id);
+  ctx.body = bill;
 });
 
 router.put('/:id', async (ctx) => {
-  try {
-    const [bill] = await updateBillById(ctx.params.id, ctx.request.body);
-    if (bill) {
-      ctx.body = bill;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [bill] = await updateBillById(ctx.params.id, ctx.request.body);
+  ctx.body = bill;
 });
 
 module.exports = router;

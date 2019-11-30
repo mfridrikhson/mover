@@ -3,10 +3,10 @@ const passport = require('koa-passport');
 module.exports = (ctx, next) =>
   passport.authenticate('jwt', async (err, user) => {
     if (err || !user) {
-      ctx.status = err ? err.status : 401;
-
       if (err) {
-        ctx.body = err.message;
+        ctx.throw(err.status, err.message);
+      } else {
+        ctx.throw(401, 'Invalid token');
       }
     } else {
       ctx.user = user;

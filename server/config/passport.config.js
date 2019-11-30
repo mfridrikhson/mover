@@ -5,7 +5,6 @@ const { getByEmail, getById } = require('../data/queries/users.query');
 const { jwtOptions } = require('../config/jwt.config');
 const cryptoHelper = require('../helpers/crypto.helper');
 
-
 passport.use(
   'login',
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
@@ -35,7 +34,7 @@ passport.use(
       try {
         const userByEmail = await getByEmail(email);
         if (userByEmail) {
-          return done({status: 401, message: 'User with such email exists'}, false);
+          return done({ status: 401, message: 'User with such email exists' }, false);
         }
         return done(null, {
           email: email,
@@ -55,7 +54,7 @@ passport.use(
   new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
     try {
       const user = await getById(jwtPayload.id);
-      return user ? done(null, user) : done({status: 401, message: 'Invalid token'}, null);
+      return user ? done(null, user) : done({ status: 401, message: 'Invalid token' }, null);
     } catch (err) {
       return done(err);
     }
