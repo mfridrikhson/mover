@@ -16,79 +16,31 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const order = await getOrderById(ctx.params.id);
-    if (order) {
-      ctx.body = order;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getOrderById(ctx.params.id);
 });
 
 router.get('/:id/route', async (ctx) => {
-  try {
-    const orderRoutes = await getOrderRoutesByOrderId(ctx.params.id);
-    if (orderRoutes) {
-      ctx.body = orderRoutes;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getOrderRoutesByOrderId(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const order = await addOrder({ ...ctx.request.body, customerId: ctx.user.id });
-
-    if (order) {
-      ctx.status = 201;
-      ctx.body = order;
-      ctx.io.to('drivers').emit('newOrder', {
-        ...order,
-        customer: ctx.user
-      });
-    } else {
-      ctx.body = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const order = await addOrder({ ...ctx.request.body, customerId: ctx.user.id });
+  ctx.status = 201;
+  ctx.body = order;
+  ctx.io.to('drivers').emit('newOrder', {
+    ...order,
+    customer: ctx.user
+  });
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [order] = await deleteOrderById(ctx.params.id);
-    if (order) {
-      ctx.body = order;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [order] = await deleteOrderById(ctx.params.id);
+  ctx.body = order;
 });
 
 router.put('/:id', async (ctx) => {
-  try{
-    const [order] = await updateOrderById(ctx.params.id, ctx.request.body);
-    if (order) {
-      ctx.body = order;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occured';
-  }
+  const [order] = await updateOrderById(ctx.params.id, ctx.request.body);
+  ctx.body = order;
 });
 
 module.exports = router;

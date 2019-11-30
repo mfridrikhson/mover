@@ -14,59 +14,22 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const vehicleType = await getVehicleTypeById(ctx.params.id);
-    if (vehicleType) {
-      ctx.body = vehicleType;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getVehicleTypeById(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const [vehicleType] = await addVehicleType(ctx.request.body);
-    if (vehicleType) {
-      ctx.body = vehicleType;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [vehicleType] = await addVehicleType(ctx.request.body);
+  ctx.body = vehicleType;
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [vehicleType] = await deleteVehicleTypeById(ctx.params.id);
-    if (vehicleType) {
-      ctx.body = vehicleType;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [vehicleType] = await deleteVehicleTypeById(ctx.params.id);
+  ctx.body = vehicleType;
 });
 
 router.put('/:id', async (ctx) => {
-  try {
-    const [vehicleType] = await updateVehicleTypeById(ctx.params.id, ctx.request.body);
-    if (vehicleType) {
-      ctx.body = vehicleType;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [vehicleType] = await updateVehicleTypeById(ctx.params.id, ctx.request.body);
+  ctx.body = vehicleType;
 });
 
 module.exports = router;

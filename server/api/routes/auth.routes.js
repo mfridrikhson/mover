@@ -9,22 +9,12 @@ const { getUserById } = require('../services/users.service');
 const router = new Router({ prefix: '/auth' });
 
 router.post('/login', authenticationMiddleware, async (ctx) => {
-  try {
-    ctx.body = await login(ctx.user);
-  } catch (err) {
-    ctx.status = 400;
-    ctx.message = err.message || 'Error occurred';
-  }
+  ctx.body = await login(ctx.user);
 });
 
 router.post('/register', registrationMiddleware, async (ctx) => {
-  try {
-    ctx.body = await register(ctx.user);
-    ctx.status = 201;
-  } catch(err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await register(ctx.user);
+  ctx.status = 201;
 });
 
 router.get('/user', async (ctx) => {

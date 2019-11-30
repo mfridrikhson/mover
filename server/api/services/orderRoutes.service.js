@@ -7,53 +7,17 @@ const {
   updateById
 } = require('../../data/queries/orderRoutes.query');
 
-const getAllOrderRoutes = async () => {
-  try {
-    return await getAll();
-  } catch (err) {
-    throw err;
-  }
-};
+const getAllOrderRoutes = () => getAll();
 
-const getOrderRouteById = async (id) => {
-  try {
-    return await getById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const getOrderRouteById = (id) => getById(id);
 
-const getOrderRoutesByOrderId = async (orderId) => {
-  try {
-    return await getByOrderId(orderId);
-  } catch (err) {
-    throw err;
-  }
-};
+const getOrderRoutesByOrderId = (orderId) => getByOrderId(orderId);
 
-const addOrderRoute = async (orderRoute) => {
-  try {
-    return await add({ ...orderRoute, createdAt: new Date() });
-  } catch (err) {
-    throw err;
-  }
-};
+const addOrderRoute = async (orderRoute) => add({ ...orderRoute, createdAt: new Date() });
 
-const deleteOrderRouteById = async (id) => {
-  try {
-    return await deleteById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const deleteOrderRouteById = async (id) => deleteById(id);
 
-const updateOrderRouteById = async (id, orderRoute) => {
-  try {
-    return await updateById(id, orderRoute);
-  } catch (err) {
-    throw err;
-  }
-};
+const updateOrderRouteById = (id, orderRoute) => updateById(id, orderRoute);
 
 module.exports = {
   getAllOrderRoutes,

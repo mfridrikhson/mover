@@ -8,55 +8,29 @@ const {
 
 const { getDriverByUserId, addDriver } = require('../services/drivers.service');
 
-const getAllUsers = async () => {
-  try {
-    return await getAll();
-  } catch (err) {
-    throw err;
-  }
-};
+const getAllUsers = () => getAll();
 
 const getUserById = async (id) => {
-  try {
-    const user = await getById(id);
-    if (user.isDriver) {
-      const driver = await getDriverByUserId(user.id);
-      return { user, driver };
-    }
-    return { user };
-  } catch (err) {
-    throw err;
+  const user = await getById(id);
+  if (user.isDriver) {
+    const driver = await getDriverByUserId(user.id);
+    return { user, driver };
   }
+  return { user };
 };
 
 const addUser = async (user) => {
-  try {
-    const [createdUser] = await add(user);
-    if (createdUser.isDriver) {
-      const [createdDriver] = await addDriver({ userId: createdUser.id });
-      return { user: createdUser, driver: createdDriver };
-    }
-    return { user: createdUser };
-  } catch (err) {
-    throw err;
+  const [createdUser] = await add(user);
+  if (createdUser.isDriver) {
+    const [createdDriver] = await addDriver({ userId: createdUser.id });
+    return { user: createdUser, driver: createdDriver };
   }
+  return { user: createdUser };
 };
 
-const deleteUserById = async (id) => {
-  try {
-    return await deleteById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const deleteUserById = (id) => deleteById(id);
 
-const updateUserByID = async (id, user) => {
-  try {
-    return await updateById(id, user);
-  } catch (err) {
-    throw err;
-  }
-};
+const updateUserByID = (id, user) => updateById(id, user);
 
 module.exports = {
   getAllUsers,

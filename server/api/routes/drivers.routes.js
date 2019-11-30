@@ -16,88 +16,31 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const driver = await getDriverById(ctx.params.id);
-    if (driver) {
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getDriverById(ctx.params.id);
 });
 
 router.get('/userId/:id', async (ctx) => {
-  try{
-    const driver = await getDriverByUserId(ctx.params.id);
-    if (driver) {
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getDriverByUserId(ctx.params.id);
 });
 
 router.get('/currentVehicleId/:id', async (ctx) => {
-  try {
-    const driver = await getDriverByCurrentVehicleId(ctx.params.id);
-    if (driver) {
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.stats = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getDriverByCurrentVehicleId(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const [driver] = await addDriver(ctx.request.body);
-    if (driver) {
-      ctx.status = 201;
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [driver] = await addDriver(ctx.request.body);
+  ctx.status = 201;
+  ctx.body = driver;
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [driver] = await deleteDriverById(ctx.params.id);
-    if (driver) {
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [driver] = await deleteDriverById(ctx.params.id);
+  ctx.body = driver;
 });
 
 router.put('/:id', async (ctx) => {
-  try {
-    const [driver] = await updateDriverById(ctx.params.id, ctx.request.body);
-    if (driver) {
-      ctx.body = driver;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [driver] = await updateDriverById(ctx.params.id, ctx.request.body);
+  ctx.body = driver;
 });
 
 module.exports = router;

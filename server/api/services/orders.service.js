@@ -14,52 +14,29 @@ const {
 
 
 const getAllOrders = async (filters) => {
-  try {
-    const orders = await getAll(filters).map(order => toJson(order));
-    const orderCustomers = await Promise.all(orders.map(({ customerId }) => getUserById(customerId)));
-    return orders.map((order, idx) => ({ ...order, customer: orderCustomers[idx] }));
-  } catch (err) {
-    throw err;
-  }
+  const orders = await getAll(filters).map(order => toJson(order));
+  const orderCustomers = await Promise.all(orders.map(({ customerId }) => getUserById(customerId)));
+  return orders.map((order, idx) => ({ ...order, customer: orderCustomers[idx] }));
 };
 
 const getOrderById = async (id) => {
-  try {
-    const order = toJson(await getById(id));
-    const orderCustomer = await getUserById(order.customerId);
-    return {
-      ...order,
-      customer: orderCustomer
-    };
-  } catch (err) {
-    throw err;
-  }
+  const order = toJson(await getById(id));
+  const orderCustomer = await getUserById(order.customerId);
+  return {
+    ...order,
+    customer: orderCustomer
+  };
 };
 
 const addOrder = async (order) => {
-  try {
-    const [newOrder] = await add(fromJson(order));
-    return toJson(newOrder);
-  } catch (err) {
-    throw err;
-  }
+  const [newOrder] = await add(fromJson(order));
+  return toJson(newOrder);
 };
 
-const deleteOrderById = async (id) => {
-  try {
-    return await deleteById(id).map(order => toJson(order));
-  } catch (err) {
-    throw err;
-  }
-};
+const deleteOrderById = async (id) => (await deleteById(id)).map(order => toJson(order));
 
 const updateOrderById = async (id, order) => {
-  try {
-    return await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)
-      .map(order => toJson(order));
-  } catch (err) {
-    throw err;
-  }
+  return (await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)).map(order => toJson(order));
 };
 
 module.exports = {

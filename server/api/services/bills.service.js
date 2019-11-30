@@ -6,45 +6,15 @@ const {
   updateById
 } = require('../../data/queries/bills.query');
 
-const getAllBills = async () => {
-  try {
-    return await getAll();
-  } catch (err) {
-    throw err;
-  }
-};
+const getAllBills = () => getAll();
 
-const getBillById = async (id) => {
-  try {
-    return await getById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const getBillById = (id) => getById(id);
 
-const addBill = async (bill) => {
-  try {
-    return await add(bill);
-  } catch (err) {
-    throw err;
-  }
-};
+const addBill = (bill) => add(bill);
 
-const deleteBillById = async (id) => {
-  try {
-    return await deleteById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const deleteBillById = (id) => deleteById(id);
 
-const updateBillById = async (id, bill) => {
-  try {
-    return await updateById(id, bill);
-  } catch (err) {
-    throw err;
-  }
-};
+const updateBillById = (id, bill) => updateById(id, bill);
 
 module.exports = {
   getAllBills,

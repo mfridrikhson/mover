@@ -14,60 +14,23 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/:id', async (ctx) => {
-  try {
-    const user = await getUserById(ctx.params.id);
-    if (user) {
-      ctx.body = user;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  ctx.body = await getUserById(ctx.params.id);
 });
 
 router.post('/', async (ctx) => {
-  try {
-    const user = await addUser(ctx.request.body);
-    if (user) {
-      ctx.status = 201;
-      ctx.body = user;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const user = await addUser(ctx.request.body);
+  ctx.status = 201;
+  ctx.body = user;
 });
 
 router.delete('/:id', async (ctx) => {
-  try {
-    const [user] = await deleteUserById(ctx.params.id);
-    if (user) {
-      ctx.body = user;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [user] = await deleteUserById(ctx.params.id);
+  ctx.body = user;
 });
 
 router.put('/:id', async (ctx) => {
-  try {
-    const [user] = await updateUserByID(ctx.params.id, ctx.request.body);
-    if (user) {
-      ctx.body = user;
-    } else {
-      ctx.status = 400;
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = err.message || 'Error occurred';
-  }
+  const [user] = await updateUserByID(ctx.params.id, ctx.request.body);
+  ctx.body = user;
 });
 
 module.exports = router;

@@ -8,61 +8,19 @@ const {
   updateById
 } = require('../../data/queries/vehicles.query');
 
-const getAllVehicles = async () => {
-  try {
-    return await getAll();
-  } catch (err) {
-    throw err;
-  }
-};
+const getAllVehicles = () => getAll();
 
-const getVehicleById = async (id) => {
-  try {
-    return await getById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const getVehicleById = (id) => getById(id);
 
-const getVehiclesByDriverId = async (driverId) => {
-  try {
-    return await getByDriverId(driverId);
-  } catch (err) {
-    throw err;
-  }
-};
+const getVehiclesByDriverId = (driverId) => getByDriverId(driverId);
 
-const getVehiclesByVehicleTypeId = async (vehicleTypeId) => {
-  try {
-    return await getByVehicleTypeId(vehicleTypeId);
-  } catch (err) {
-    throw err;
-  }
-};
+const getVehiclesByVehicleTypeId = (vehicleTypeId) => getByVehicleTypeId(vehicleTypeId);
 
-const addVehicle = async (vehicle) => {
-  try {
-    return await add(vehicle);
-  } catch (err) {
-    throw err;
-  }
-};
+const addVehicle = (vehicle) => add(vehicle);
 
-const deleteVehicleById = async (id) => {
-  try {
-    return await deleteById(id);
-  } catch (err) {
-    throw err;
-  }
-};
+const deleteVehicleById = (id) => deleteById(id);
 
-const updateVehicleById = async (id, vehicle) => {
-  try {
-    return await updateById(id, vehicle);
-  } catch (err) {
-    throw err;
-  }
-};
+const updateVehicleById = (id, vehicle) => updateById(id, vehicle);
 
 module.exports = {
   getAllVehicles,
