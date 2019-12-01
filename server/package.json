@@ -10,8 +10,8 @@
     "migrate:reset": "npx knex migrate:rollback --all && npm run migrate && npm run seed",
     "seed": "npx knex seed:run",
     "rollback": "npx knex migrate:rollback",
-    "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
-    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "pretest": "npx cross-env NODE_ENV=test npm run migrate:reset",
+    "test": "npx cross-env NODE_ENV=test jest --testTimeout=10000",
     "coverage": "npm run pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [],
