@@ -6,6 +6,8 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('vehicles');
+  return knex.schema.alterTable('vehicles', table => {
+    table.renameColumn('photoUrl', 'photo');
+  });
 };
 

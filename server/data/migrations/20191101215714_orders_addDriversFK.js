@@ -6,5 +6,7 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('orders');
+  return knex.schema.alterTable('orders', table => {
+    table.uuid('driverId').notNullable().alter();
+  });
 };

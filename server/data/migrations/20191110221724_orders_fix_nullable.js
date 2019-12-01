@@ -8,5 +8,9 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('orders');
+  return knex.schema.alterTable('orders', table => {
+    table.uuid('billId').unsigned().notNullable().alter();
+    table.uuid('vehicleId').unsigned().notNullable().alter();
+    table.uuid('driverId').unsigned().notNullable().alter();
+  });
 };

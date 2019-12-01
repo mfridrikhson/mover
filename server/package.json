@@ -6,9 +6,13 @@
   "scripts": {
     "start": "nodemon server.js",
     "lint": "eslint --fix ./**/*.js",
-    "migrate": "npx knex migrate:latest --env development",
-    "seed": "npx knex seed:run --env development",
-    "rollback": "npx knex migrate:rollback"
+    "migrate": "npx knex migrate:latest",
+    "migrate:reset": "npx knex migrate:rollback --all --env test && npm run migrate -- --env test && npm run seed -- --env test",
+    "seed": "npx knex seed:run",
+    "rollback": "npx knex migrate:rollback",
+    "pretest": "npm run migrate:reset",
+    "test": "jest --testTimeout=10000",
+    "coverage": "npm run pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [],
   "author": "",
@@ -32,10 +36,17 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
+    "coveralls": "^3.0.9",
     "dotenv": "^8.1.0",
     "eslint": "^6.5.1",
-    "nodemon": "^1.19.3"
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.3",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
