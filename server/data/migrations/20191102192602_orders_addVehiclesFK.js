@@ -7,7 +7,8 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.alterTable('orders', table => {
-    table.uuid('vehicleId').notNullable().alter();
+  return knex.schema.table('orders', table => {
+    table.dropIndex(['vehicleId']);
+    table.dropForeign(['vehicleId']);
   });
 };
