@@ -3,11 +3,6 @@ pip install --user awscli
 aws s3 cp s3://movers3/.env.stage server/.env
 aws s3 cp s3://movers3/.env.client client/.env
 
-cd server/
-npm test
-npm run coverage
-cd ..
-
 cd client/
 npm run build
 rm -rf !("build")
