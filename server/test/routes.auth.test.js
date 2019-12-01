@@ -13,6 +13,10 @@ beforeEach(() => {
     });
 });
 
+afterEach(() => {
+  server.close();
+});
+
 describe('routes : auth', () => {
   describe('POST /api/auth/register', () => {
 
