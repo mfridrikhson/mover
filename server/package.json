@@ -7,11 +7,11 @@
     "start": "nodemon server.js",
     "lint": "eslint --fix ./**/*.js",
     "migrate": "npx knex migrate:latest",
-    "migrate:reset": "npx knex migrate:rollback --all --env test && npm run migrate -- --env test && npm run seed -- --env test",
+    "migrate:reset": "npx knex migrate:rollback --all && npm run migrate && npm run seed",
     "seed": "npx knex seed:run",
     "rollback": "npx knex migrate:rollback",
-    "pretest": "npm run migrate:reset",
-    "test": "jest --testTimeout=10000",
+    "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
     "coverage": "npm run pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [],
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.9",
+    "cross-env": "^6.0.3",
     "dotenv": "^8.1.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
