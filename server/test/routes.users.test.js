@@ -1,39 +1,20 @@
-process.env.NODE_ENV = 'test';
-
-const chai = require('chai');
-const should = chai.should();
-const chaiHttp = require('chai-http');
-chai.use(chaiHttp);
+/*
+const request = require('supertest');
 
 const server = require('../server');
-const knex = require('../data/db/connection');
+
 const { createToken } = require('../helpers/token.helper');
 
 //TODO add proper error checks (unathorized vs all other)
 describe('routes : users', () => {
-
-  beforeEach(() => {
-    return knex.migrate.rollback()
-      .then(() => {
-        return knex.migrate.latest();
-      })
-      .then(() => {
-        return knex.seed.run();
-      });
-  });
-
-  afterEach(() => {
-    return knex.migrate.rollback();
-  });
-
   describe('GET /api/users', () => {
-    it('should return all users', done => {
+    test('should return all users', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
-          chai.request(server)
+          request(server)
             .get('/api/users')
             .set('Authorization', `Bearer ${token}`)
             .end((err, res) => {
@@ -51,14 +32,14 @@ describe('routes : users', () => {
   });
 
   describe('GET /api/users/:id', () => {
-    it('should return user where id = aeb77984-bd08-4489-85fc-d5fface23a78', done => {
+    test('should return user where id = aeb77984-bd08-4489-85fc-d5fface23a78', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
 
-          chai.request(server)
+          request(server)
             .get('/api/users/aeb77984-bd08-4489-85fc-d5fface23a78')
             .set('Authorization', `Bearer ${token}`)
             .end((err, res) => {
@@ -75,8 +56,8 @@ describe('routes : users', () => {
     });
 
 
-    it('should throw an error if user does not exist', done => {
-      chai.request(server)
+    test('should throw an error if user does not exist', done => {
+      request(server)
         .get('api/users/123')
         .end((err) => {
           should.exist(err);
@@ -86,14 +67,14 @@ describe('routes : users', () => {
   });
 
   describe('POST /api/users', () => {
-    it('should return the user that was added', done => {
+    test('should return the user that was added', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
 
-          chai.request(server)
+          request(server)
             .post('/api/users')
             .set('Authorization', `Bearer ${ token }`)
             .send({
@@ -115,14 +96,14 @@ describe('routes : users', () => {
         });
     });
 
-    it('should return an error if a body is incorrect', done => {
+    test('should return an error if a body is incorrect', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
 
-          chai.request(server)
+          request(server)
             .post('/api/users')
             .set('Authorization', `Bearer ${ token }`)
             .send({
@@ -139,14 +120,14 @@ describe('routes : users', () => {
   });
 
   describe('DELETE /api/users/:id', () => {
-    it('should return user that was deleted', done => {
+    test('should return user that was deleted', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
           const usersLengthBeforeDelete = users.length;
-          chai.request(server)
+          request(server)
             .delete(`/api/users/${user.id}`)
             .set('Authorization', `Bearer ${token}`)
             .end((err, res) => {
@@ -165,13 +146,13 @@ describe('routes : users', () => {
         });
     });
 
-    it('should return an error if user with such id doesn`t exist', done => {
+    test('should return an error if user with such id doesn`t exist', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
-          chai.request(server)
+          request(server)
             .delete('/api/users/123')
             .set('Authorization', `Bearer ${ token }`)
             .end((err, res) => {
@@ -184,13 +165,13 @@ describe('routes : users', () => {
   });
 
   describe('PUT /api/users/:id', () => {
-    it('should return the movie that was updated', done => {
+    test('should return the movie that was updated', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
-          chai.request(server)
+          request(server)
             .put(`/api/users/${user.id}`)
             .set('Authorization', `Bearer ${token}`)
             .send({
@@ -211,13 +192,13 @@ describe('routes : users', () => {
         });
     });
 
-    it('should return an error if user with such id doesn`t exist', done => {
+    test('should return an error if user with such id doesn`t exist', done => {
       knex('users')
         .select('*')
         .then(users => {
           const user = users[0];
           const token = createToken({ id: user.id, email: user.email });
-          chai.request(server)
+          request(server)
             .put('/api/users/123')
             .set('Authorization', `Bearer ${ token }`)
             .end((err, res) => {
@@ -233,3 +214,4 @@ describe('routes : users', () => {
 
 
 
+*/

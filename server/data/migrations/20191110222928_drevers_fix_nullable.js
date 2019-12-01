@@ -7,6 +7,9 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('drivers');
+  return knex.schema.alterTable('drivers', table => {
+    table.uuid('currentVehicleId').unsigned().notNullable().alter();
+    table.string('driverLicenseUrl').notNullable().alter();
+  });
 };
 

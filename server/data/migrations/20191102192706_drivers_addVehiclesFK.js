@@ -7,5 +7,8 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('drivers');
+  return knex.schema.table('drivers', table => {
+    table.dropIndex(['currentVehicleId']);
+    table.dropForeign(['currentVehicleId']);
+  });
 };
