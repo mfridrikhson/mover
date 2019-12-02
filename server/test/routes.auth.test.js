@@ -1,17 +1,6 @@
 const request = require('supertest');
 
 const server = require('../server');
-const knex = require('../data/db/connection');
-
-beforeEach(() => {
-  return knex.migrate.rollback()
-    .then(() => {
-      return knex.migrate.latest();
-    })
-    .then(() => {
-      return knex.seed.run();
-    });
-});
 
 afterEach(() => {
   server.close();
@@ -43,7 +32,7 @@ describe('routes : auth', () => {
       request(server)
         .post('/api/auth/register')
         .send({
-          email: 'user25@gmail.com',
+          email: 'user26@gmail.com',
           password: 'asdqqwerfg',
           firstName: 'Jack'
         })
@@ -58,7 +47,7 @@ describe('routes : auth', () => {
       request(server)
         .post('/api/auth/register')
         .send({
-          email: 'user1@gmail.com',
+          email: 'user25@gmail.com',
           password: 'asdqqwerfg',
           firstName: 'Jack',
           lastName: 'London',
@@ -107,7 +96,7 @@ describe('routes : auth', () => {
       request(server)
         .post('/api/auth/register')
         .send({
-          email: 'user12@gmail.com',
+          email: 'user13@gmail.com',
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow',
@@ -116,7 +105,7 @@ describe('routes : auth', () => {
         request(server)
           .post('/api/auth/login')
           .send({
-            email: 'user12@gmail.com',
+            email: 'user13@gmail.com',
             password: 'asdqwertyf',
             firstName: 'Bob',
             lastName: 'Snow'
@@ -134,7 +123,7 @@ describe('routes : auth', () => {
       request(server)
         .post('/api/auth/login')
         .send({
-          email: 'user12@gmail.com',
+          email: 'user14@gmail.com',
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow'
@@ -155,7 +144,7 @@ describe('routes : auth', () => {
       request(server)
         .post('/api/auth/register')
         .send({
-          email: 'user11@gmail.com',
+          email: 'user15@gmail.com',
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow',
@@ -165,7 +154,7 @@ describe('routes : auth', () => {
           request(server)
             .post('/api/auth/login')
             .send({
-              email: 'user11@gmail.com',
+              email: 'user15@gmail.com',
               password: 'asdqwertyfg',
               firstName: 'Bob',
               lastName: 'Snow',
@@ -192,8 +181,7 @@ describe('routes : auth', () => {
           expect(res.status).toEqual(401);
           expect(res.text).toEqual('Invalid token');
           done();
-        })
-    })
-
+        });
+    });
   });
 });
