@@ -1,16 +1,21 @@
-const request = require('supertest');
+const supertest = require('supertest');
 
-const server = require('../server');
+const server = require('../app');
 
-afterEach(() => {
-  server.close();
-});
+const request = supertest(server.callback());
+
+const knex = require('../data/db/connection');
 
 describe('routes : auth', () => {
+
+  afterAll(async () =>{
+    knex.destroy();
+  });
+
   describe('POST /api/auth/register', () => {
 
-    test('should return user and token', done => {
-      request(server)
+    it('should return user and token', async () => {
+      const res = await request
         .post('/api/auth/register')
         .send({
           email: 'user25@gmail.com',
@@ -18,33 +23,25 @@ describe('routes : auth', () => {
           firstName: 'Jack',
           lastName: 'London',
           isDriver: false
-        })
-        .end((err, res) => {
-          expect(err).toBeNull();
-          expect(res.status).toEqual(201);
-          expect(res.body).toHaveProperty('token');
-          expect(res.body).toHaveProperty('user');
-          done();
         });
+      expect(res.status).toEqual(201);
+      expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('user');
     });
 
-    test('should return an error if body is incomplete', done => {
-      request(server)
+    it('should return an error if body is incomplete', async () => {
+      const res = await request
         .post('/api/auth/register')
         .send({
           email: 'user26@gmail.com',
           password: 'asdqqwerfg',
           firstName: 'Jack'
-        })
-        .end((err, res) => {
-          expect(err).toBeNull();
-          expect(res.status).toEqual(500);
-          done();
         });
+      expect(res.status).toEqual(500);
     });
 
-    test('should return an error if user already exist', done => {
-      request(server)
+    it('should return an error if user already exist', async () => {
+      const res = await request
         .post('/api/auth/register')
         .send({
           email: 'user25@gmail.com',
@@ -52,20 +49,16 @@ describe('routes : auth', () => {
           firstName: 'Jack',
           lastName: 'London',
           isDriver: false
-        })
-        .end((err, res) => {
-          expect(err).toBeNull();
-          expect(res.status).toEqual(401);
-          expect(res.text).toEqual('User with such email exists');
-          done();
         });
+      expect(res.status).toEqual(401);
+      expect(res.text).toEqual('User with such email exists');
     });
   });
 
   describe('POST /api/auth/login', () => {
 
-    test('should return user and token', done => {
-      request(server)
+    it('should return user and token', async () => {
+      await request
         .post('/api/auth/register')
         .send({
           email: 'user12@gmail.com',
@@ -73,27 +66,23 @@ describe('routes : auth', () => {
           firstName: 'Bob',
           lastName: 'Snow',
           isDriver: false
-        }).end(() => {
-        request(server)
-          .post('/api/auth/login')
-          .send({
-            email: 'user12@gmail.com',
-            password: 'asdqwertyfg',
-            firstName: 'Bob',
-            lastName: 'Snow'
-          })
-          .end((err, res) => {
-            expect(err).toBeNull();
-            expect(res.status).toEqual(200);
-            expect(res.body).toHaveProperty('user');
-            expect(res.body).toHaveProperty('token');
-            done();
-          })
-      });
+        });
+      const res = await request
+        .post('/api/auth/login')
+        .send({
+          email: 'user12@gmail.com',
+          password: 'asdqwertyfg',
+          firstName: 'Bob',
+          lastName: 'Snow'
+        });
+      expect(res.status).toEqual(200);
+      expect(res.body).toHaveProperty('user');
+      expect(res.body).toHaveProperty('token');
     });
 
-    test('should return an error if passwords do not match', done => {
-      request(server)
+
+    it('should return an error if passwords do not match', async () => {
+      await request
         .post('/api/auth/register')
         .send({
           email: 'user13@gmail.com',
@@ -101,47 +90,39 @@ describe('routes : auth', () => {
           firstName: 'Bob',
           lastName: 'Snow',
           isDriver: false
-        }).end(() => {
-        request(server)
-          .post('/api/auth/login')
-          .send({
-            email: 'user13@gmail.com',
-            password: 'asdqwertyf',
-            firstName: 'Bob',
-            lastName: 'Snow'
-          })
-          .end((err, res) => {
-            expect(err).toBeNull();
-            expect(res.status).toEqual(401);
-            expect(res.text).toEqual('Passwords do not match.');
-            done();
-          })
-      });
+        });
+      const res = await request
+        .post('/api/auth/login')
+        .send({
+          email: 'user13@gmail.com',
+          password: 'asdqwertyf',
+          firstName: 'Bob',
+          lastName: 'Snow'
+        });
+      expect(res.status).toEqual(401);
+      expect(res.text).toEqual('Passwords do not match.');
     });
 
-    test('should return an error if such user is not registered', done => {
-      request(server)
+
+    it('should return an error if such user is not registered', async () => {
+      const res = await request
         .post('/api/auth/login')
         .send({
           email: 'user14@gmail.com',
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow'
-        })
-        .end((err, res) => {
-          expect(err).toBeNull();
-          expect(res.status).toEqual(401);
-          expect(res.text).toEqual('Incorrect email.');
-          done();
         });
+      expect(res.status).toEqual(401);
+      expect(res.text).toEqual('Incorrect email.');
     });
-
   });
+
 
   describe('GET /api/auth/user', () => {
 
-    test('should return user', done => {
-      request(server)
+    it('should return user', async () => {
+      await request
         .post('/api/auth/register')
         .send({
           email: 'user15@gmail.com',
@@ -149,39 +130,30 @@ describe('routes : auth', () => {
           firstName: 'Bob',
           lastName: 'Snow',
           isDriver: false
-        })
-        .end(() => {
-          request(server)
-            .post('/api/auth/login')
-            .send({
-              email: 'user15@gmail.com',
-              password: 'asdqwertyfg',
-              firstName: 'Bob',
-              lastName: 'Snow',
-            })
-            .end((err, res) => {
-              request(server)
-                .get('/api/auth/user')
-                .set('Authorization', `Bearer ${ res.body.token }`)
-                .end((err, res) => {
-                  expect(err).toBeNull();
-                  expect(res.status).toEqual(200);
-                  expect(res.body).toHaveProperty('user');
-                  done();
-                });
-            });
         });
-    });
+      const response = await request
+        .post('/api/auth/login')
+        .send({
+          email: 'user15@gmail.com',
+          password: 'asdqwertyfg',
+          firstName: 'Bob',
+          lastName: 'Snow',
+        });
 
-    test('should return an error if token is not passed', done => {
-      request(server)
+      const res = await request
         .get('/api/auth/user')
-        .end((err, res) => {
-          expect(err).toBeNull();
-          expect(res.status).toEqual(401);
-          expect(res.text).toEqual('Invalid token');
-          done();
-        });
+        .set('Authorization', `Bearer ${ response.body.token }`);
+      expect(res.status).toEqual(200);
+      expect(res.body).toHaveProperty('user');
+    })
+    ;
+
+    it('should return an error if token is not passed', async () => {
+      const res = await request
+        .get('/api/auth/user');
+      expect(res.status).toEqual(401);
+      expect(res.text).toEqual('Invalid token');
     });
   });
 });
+
