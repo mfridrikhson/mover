@@ -5,6 +5,7 @@ branches:
   only:
     - develop
 install:
+  - cd server/ && npm install && cd ..
   - . scripts/install.sh
 script:
   - . scripts/test.sh && . scripts/script.sh
