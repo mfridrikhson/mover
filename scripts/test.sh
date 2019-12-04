@@ -1,3 +1,3 @@
 #!/bin/bash
 cd server/
-npm test && cd ..
+npm test && rm -rf node_modules && cd ..
