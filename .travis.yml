@@ -5,7 +5,7 @@ branches:
   only:
     - develop
 install:
-  - cd server/ && npm install && cd ..
+  - npm install knex
   - . scripts/install.sh
 script:
   - . scripts/test.sh && . scripts/script.sh
