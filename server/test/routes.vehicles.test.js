@@ -21,7 +21,7 @@ describe('routes : vehicles', () => {
     return knex.destroy();
   });
 
-  describe('GET /api/vehicle-types', () => {
+  describe('GET /api/vehicles', () => {
     it('should return all vehicle types', async (done) => {
       const resWithToken = await request
         .post('/api/auth/login')
