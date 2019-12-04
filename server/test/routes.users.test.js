@@ -21,7 +21,6 @@ describe('routes : users', () => {
     return knex.destroy();
   });
 
-
   describe('PUT /api/users/:id', () => {
 
     it('should return user that was updated', async (done) => {
