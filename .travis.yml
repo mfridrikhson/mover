@@ -6,6 +6,7 @@ branches:
     - develop
 install:
   - npm install knex
+  - npm install dotenv
   - . scripts/install.sh
 script:
   - . scripts/test.sh && . scripts/script.sh
