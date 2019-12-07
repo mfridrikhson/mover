@@ -61,6 +61,7 @@ describe('routes : vehicles', () => {
       const mockEmit = jest.fn();
       const mockTo = jest.fn(() => ({ emit: mockEmit }));
       app.context.io = { to: mockTo };
+      Object.freeze(app.context);
 
       request
         .post('/api/orders')
