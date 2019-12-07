@@ -2,18 +2,8 @@ require('dotenv').config();
 const fs = require('fs');
 const serve = require('koa-static');
 const path = require('path');
-const http = require('http');
-const socketIO = require('socket.io');
 
-const app = require('./app');
-const socketInjector = require('./socket/injector');
-const socketHandlers = require('./socket/handlers');
-
-const socketServer = http.Server(app.callback());
-const io = socketIO(socketServer);
-io.on('connection', socketHandlers);
-
-app.use(socketInjector(io));
+const { app, socketServer } = require('./app');
 
 app.use(serve(path.join(__dirname, '../client/build')));
 app.use(ctx => {

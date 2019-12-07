@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 
-const app = require('../app');
+const { app } = require('../app');
 const knex = require('../data/db/connection');
 const request = supertest(app.callback());
 
