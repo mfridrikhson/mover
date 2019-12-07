@@ -10,8 +10,6 @@ const imageRoutes = require('./images.routes');
 const driversRoutes = require('./drivers.routes');
 const vehicleTypesRoutes = require('./vehicleTypes.routes');
 const vehiclesRoutes = require('./vehicles.routes');
-const billsRoutes = require('./bills.routes');
-const orderRoutesRoutes = require('./orderRoutes.routes');
 
 module.exports = app => {
   rootRouter.use(authorizationMiddleware(routesWhiteList));
@@ -23,8 +21,6 @@ module.exports = app => {
   rootRouter.use(driversRoutes.routes());
   rootRouter.use(vehicleTypesRoutes.routes());
   rootRouter.use(vehiclesRoutes.routes());
-  rootRouter.use(billsRoutes.routes());
-  rootRouter.use(orderRoutesRoutes.routes());
 
   app.use(rootRouter.routes());
 };
