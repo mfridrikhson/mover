@@ -5,7 +5,6 @@ const {
   getAllUsers,
   getUserById,
   addUser,
-  deleteUserById,
   updateUserByID
 } = require('../services/users.service');
 
@@ -20,11 +19,6 @@ router.get('/:id', async (ctx) => {
 router.post('/', async (ctx) => {
   const user = await addUser(ctx.request.body);
   ctx.status = 201;
-  ctx.body = user;
-});
-
-router.delete('/:id', async (ctx) => {
-  const [user] = await deleteUserById(ctx.params.id);
   ctx.body = user;
 });
 

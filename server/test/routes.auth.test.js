@@ -1,6 +1,6 @@
 const supertest = require('supertest');
-const server = require('../app');
-const request = supertest(server.callback());
+const app = require('../app');
+const request = supertest(app.callback());
 const knex = require('../data/db/connection');
 
 describe('routes : auth', () => {
@@ -20,9 +20,10 @@ describe('routes : auth', () => {
           firstName: 'Jack',
           lastName: 'London',
           isDriver: false
-        }).end((err, res) => {
+        })
+        .expect(201)
+        .end((err, res) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(201);
         expect(res.body).toHaveProperty('token');
         expect(res.body).toHaveProperty('user');
         done();
@@ -36,9 +37,10 @@ describe('routes : auth', () => {
           email: 'user26@gmail.com',
           password: 'asdqqwerfg',
           firstName: 'Jack'
-        }).end((err, res) => {
+        })
+        .expect(500)
+        .end((err) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(500);
         done();
       });
     });
@@ -52,9 +54,10 @@ describe('routes : auth', () => {
           firstName: 'Jack',
           lastName: 'London',
           isDriver: false
-        }).end((err, res) => {
+        })
+        .expect(401)
+        .end((err, res) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(401);
         expect(res.text).toEqual('User with such email exists');
         done();
       });
@@ -80,9 +83,10 @@ describe('routes : auth', () => {
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow'
-        }).end((err, res) => {
+        })
+        .expect(200)
+        .end((err, res) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(200);
         expect(res.body).toHaveProperty('user');
         expect(res.body).toHaveProperty('token');
         done();
@@ -107,9 +111,10 @@ describe('routes : auth', () => {
           password: 'asdqwertyf',
           firstName: 'Bob',
           lastName: 'Snow'
-        }).end((err, res) => {
+        })
+        .expect(401)
+        .end((err, res) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(401);
         expect(res.text).toEqual('Passwords do not match.');
         done();
       });
@@ -124,9 +129,10 @@ describe('routes : auth', () => {
           password: 'asdqwertyfg',
           firstName: 'Bob',
           lastName: 'Snow'
-        }).end((err, res) => {
+        })
+        .expect(401)
+        .end((err, res) => {
         expect(err).toBeNull();
-        expect(res.status).toEqual(401);
         expect(res.text).toEqual('Incorrect email.');
         done();
       });
@@ -159,9 +165,9 @@ describe('routes : auth', () => {
       request
         .get('/api/auth/user')
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
+        .expect(200)
         .end((err, res) => {
           expect(err).toBeNull();
-          expect(res.status).toEqual(200);
           expect(res.body).toHaveProperty('user');
           done();
         });
@@ -170,9 +176,9 @@ describe('routes : auth', () => {
     it('should return an error if token is not passed', async (done) => {
       request
         .get('/api/auth/user')
+        .expect(401)
         .end((err, res) => {
           expect(err).toBeNull();
-          expect(res.status).toEqual(401);
           expect(res.text).toEqual('Invalid token');
           done();
         });

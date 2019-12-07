@@ -3,46 +3,49 @@ const app = require('../app');
 const request = supertest(app.callback());
 const knex = require('../data/db/connection');
 
-describe('routes : users', () => {
+describe('routes : drivers', () => {
 
   beforeAll(() => {
     return request
       .post('/api/auth/register')
       .send({
-        email: 'test@gmail.com',
+        email: 'test_driver@gmail.com',
         password: 'test123456',
         firstName: 'Bob',
         lastName: 'Snow',
-        isDriver: false
+        isDriver: true
       });
   });
 
-  afterAll(() => {
-    return knex.destroy();
+  afterAll(async () => {
+    await knex.raw('truncate table users cascade');
+    await knex.destroy();
   });
 
-  describe('PUT /api/users/:id', () => {
+  describe('PUT /api/drivers/:id', () => {
 
-    it('should return user that was updated', async (done) => {
+    it('should return driver that was updated', async (done) => {
       const resWithToken = await request
         .post('/api/auth/login')
         .send({
-          email: 'test@gmail.com',
+          email: 'test_driver@gmail.com',
           password: 'test123456'
         });
+
+      const driver = await request
+        .get(`/api/drivers/userId/${ resWithToken.body.user.id }`)
+        .set('Authorization', `Bearer ${ resWithToken.body.token }`);
+
       request
-        .put(`/api/users/${ resWithToken.body.user.id }`)
+        .put(`/api/drivers/${ driver.body.id }`)
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
         .send({
-          lastName: 'Wazowski',
+          driverLicenseUrl: 'driver.license123asd'
         })
         .expect(200)
         .end((err, res) => {
           expect(err).toBeNull();
-          expect(res.body.email).toEqual('test@gmail.com');
-          expect(res.body.firstName).toEqual('Bob');
-          expect(res.body.lastName).toEqual('Wazowski');
-          expect(res.body.isDriver).toEqual(false);
+          expect(res.body.driverLicenseUrl).toEqual('driver.license123asd');
           done();
         });
     });
@@ -51,14 +54,19 @@ describe('routes : users', () => {
       const resWithToken = await request
         .post('/api/auth/login')
         .send({
-          email: 'test@gmail.com',
+          email: 'test_driver@gmail.com',
           password: 'test123456'
         });
+
+      const driver = await request
+        .get(`/api/drivers/userId/${ resWithToken.body.id }`)
+        .set('Authorization', `Bearer ${ resWithToken.body.token }`);
+
       request
-        .put(`/api/users/${ resWithToken.body.user.id }`)
+        .put(`/api/drivers/${ driver.id }`)
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
         .send({
-          lastName: undefined
+          driverLicenseUrl: undefined
         })
         .expect(500)
         .end((err) => {
@@ -67,18 +75,18 @@ describe('routes : users', () => {
         });
     });
 
-    it('should return an error if user with such id doesn`t exist', async (done) => {
+    it('should return an error if driver with such id doesn`t exist', async (done) => {
       const resWithToken = await request
         .post('/api/auth/login')
         .send({
-          email: 'test@gmail.com',
+          email: 'test_driver@gmail.com',
           password: 'test123456'
         });
       request
-        .put(`/api/users/123`)
+        .put(`/api/drivers/123`)
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
         .send({
-          lastName: 'Wazowski'
+          driverLicenseUrl: 'driver.license123asd'
         })
         .expect(500)
         .end((err) => {

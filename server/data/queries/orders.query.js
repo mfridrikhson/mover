@@ -27,13 +27,6 @@ const add = order => {
     .returning('*');
 };
 
-const deleteById = id => {
-  return knex('orders')
-    .del()
-    .where({ id })
-    .returning('*');
-};
-
 const updateById = (id, order) => {
   return knex('orders')
     .update(order)
@@ -46,6 +39,5 @@ module.exports = {
   getAll,
   getById,
   add,
-  deleteById,
   updateById
 };
