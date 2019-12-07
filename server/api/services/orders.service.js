@@ -48,25 +48,28 @@ const updateRating = ({ customerId, driverId, userRating, driverRating }) => {
   }
 };
 
-const updateDriverRating = async (driverId) => {
-  const customerId = await getDriverById( driverId );
-  const result = await getAllOrders({ driverId: driverId });
-  const len = result.filter(order => order.driverRating !== null).length;
+const updateUserRating = async (id, userIsDriver) => {
+  const idPropName = userIsDriver ? 'driverId': 'customerId';
+  const ratingPropName = userIsDriver ? 'driverRating': 'userRating';
+  const result = await getAllOrders({ [idPropName]: id });
+  const len = result.filter(order => !!order[ratingPropName]).length;
   const sum = result
-    .filter(order => order.driverRating !== null)
-    .map(order => order.driverRating)
+    .filter(order => !!order[ratingPropName])
+    .map(order => order[ratingPropName])
     .reduce((acc, cur) => acc + cur);
-  await (updateUserByID(customerId, { rating: sum / len }));
+
+  await updateUserByID(id, { rating: sum / len });
+};
+
+const updateDriverRating = async (driverId) => {
+  const { userId } = await getDriverById( driverId );
+  const userIsDriver = true;
+
+  await updateUserRating(userId, userIsDriver);
 };
 
 const updateCustomerRating = async (customerId) => {
-  const result = await getAllOrders({ customerId: customerId });
-  const len = result.filter(order => order.userRating !== null).length;
-  const sum = result
-    .filter(order => order.userRating !== null)
-    .map(order => order.userRating)
-    .reduce((acc, cur) => acc + cur);
-  await (updateUserByID(customerId, { rating: sum / len }));
+  await updateUserRating(customerId);
 };
 
 module.exports = {
