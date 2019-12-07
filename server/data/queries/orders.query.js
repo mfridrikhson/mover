@@ -34,7 +34,6 @@ const updateById = (id, order) => {
     .returning('*');
 };
 
-
 module.exports = {
   getAll,
   getById,

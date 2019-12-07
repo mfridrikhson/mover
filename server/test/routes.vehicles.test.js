@@ -1,8 +1,8 @@
 const supertest = require('supertest');
 
-const server = require('../app');
+const app = require('../app');
 const knex = require('../data/db/connection');
-const request = supertest(server.callback());
+const request = supertest(app.callback());
 
 describe('routes : vehicles', () => {
   beforeAll(async () => {
