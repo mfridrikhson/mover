@@ -16,7 +16,7 @@ Mover app is an application that gives ability for people to find a way to conve
 - Redux
 ### Back-end:
 - Koa
-- Sequelize
+- Knex
 - PostgreSQL
 
 ## Data flow:
