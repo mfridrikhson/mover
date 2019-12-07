@@ -17,8 +17,13 @@ describe('routes : vehicles', () => {
       });
   });
 
-  afterAll(() => {
-    return knex.destroy();
+  afterEach(async () => {
+    await knex.raw('delete from vehicles');
+  });
+
+  afterAll(async () => {
+    await knex.raw('truncate table users cascade');
+    await knex.destroy();
   });
 
   describe('POST /api/vehicles', () => {
@@ -29,45 +34,74 @@ describe('routes : vehicles', () => {
           email: 'test@gmail.com',
           password: 'test123456'
         });
-
       const { body: vehicleTypes } = await request
-        .get('/api/vehicle-types');
+        .get('/api/vehicle-types')
+        .set('Authorization', `Bearer ${ resWithToken.body.token }`);
+      const expectedData = {
+        name: 'Daewoo Lanos',
+        registrationPlate: 'АА 1234 АН',
+        color: '#000000',
+        vehicleTypeId: vehicleTypes[0].id,
+        photoUrl: 'http://some.url',
+        techPassportUrl: 'http://some.url',
+        driverId: resWithToken.body.driver.id
+      };
 
       request
         .post('/api/vehicles')
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
-        .send({
-          name: 'Daewoo Lanos',
-          registrationPlate: 'АА 12345 АН',
-          color: '#000000',
-          vehicleTypeId: vehicleTypes[0].id,
-          photoUrl: 'http://some.url',
-          techPassportUrl: 'http://some.url',
-          driverId: resWithToken.body.driver.id
-        })
-        .expect(201)
+        .send(expectedData)
+        .expect(200)
         .end((err, res) => {
-          console.log(res.body);
           expect(err).toBeNull();
-          /*expect(res.body).toEqual(
-
-          );*/
+          expect(res.body).toEqual(expect.arrayContaining(
+            [expect.objectContaining(expectedData)]
+          ));
           done();
         });
     });
   });
 
   describe('GET /api/vehicles', () => {
-    it('should return all vehicle types', async (done) => {
+    it('should return all driver\'s vehicles', async (done) => {
       const resWithToken = await request
         .post('/api/auth/login')
         .send({
           email: 'test@gmail.com',
           password: 'test123456'
         });
+      const { body: vehicleTypes } = await request
+        .get('/api/vehicle-types')
+        .set('Authorization', `Bearer ${ resWithToken.body.token }`);
+      const expectedData = [
+        {
+          name: 'Daewoo Lanos',
+          registrationPlate: 'АА 1234 АН',
+          color: '#000000',
+          vehicleTypeId: vehicleTypes[0].id,
+          photoUrl: 'http://some.url',
+          techPassportUrl: 'http://some.url',
+          driverId: resWithToken.body.driver.id
+        },
+        {
+          name: 'Chevrolet Aveo',
+          registrationPlate: 'АА 5678 АН',
+          color: '#111111',
+          vehicleTypeId: vehicleTypes[1].id,
+          photoUrl: 'http://some.url',
+          techPassportUrl: 'http://some.url',
+          driverId: resWithToken.body.driver.id
+        }
+      ];
+
+      await Promise.all(expectedData.map((vehicle) => request
+        .post('/api/vehicles')
+        .set('Authorization', `Bearer ${ resWithToken.body.token }`)
+        .send(vehicle)
+      ));
 
       request
-        .get('/api/vehicle-types')
+        .get(`/api/vehicles/driver/${resWithToken.body.driver.id}`)
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
         .expect(200)
         .end((err, res) => {
