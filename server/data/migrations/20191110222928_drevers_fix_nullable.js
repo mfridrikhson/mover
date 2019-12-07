@@ -12,4 +12,3 @@ exports.down = function(knex) {
     table.string('driverLicenseUrl').notNullable().alter();
   });
 };
-
