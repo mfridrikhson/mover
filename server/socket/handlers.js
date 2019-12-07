@@ -1,4 +1,4 @@
-const { getAllOrders, updateOrderById } = require( '../api/services/orders.service');
+const { getAllOrders, updateOrderById } = require('../api/services/orders.service');
 const { addOrderRoute } = require('../api/services/orderRoutes.service');
 
 const addRoomManagement = socket => {

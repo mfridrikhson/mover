@@ -17,8 +17,9 @@ describe('routes : users', () => {
       });
   });
 
-  afterAll(() => {
-    return knex.destroy();
+  afterAll(async () => {
+    await knex.raw('truncate table users cascade');
+    await knex.destroy();
   });
 
   describe('PUT /api/users/:id', () => {
