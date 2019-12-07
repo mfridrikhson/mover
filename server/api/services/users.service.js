@@ -1,13 +1,10 @@
 const {
-  getAll,
   getById,
   add,
   updateById
 } = require('../../data/queries/users.query');
 
 const { getDriverByUserId, addDriver } = require('../services/drivers.service');
-
-const getAllUsers = () => getAll();
 
 const getUserById = async (id) => {
   const user = await getById(id);
@@ -30,7 +27,6 @@ const addUser = async (user) => {
 const updateUserByID = (id, user) => updateById(id, user);
 
 module.exports = {
-  getAllUsers,
   getUserById,
   addUser,
   updateUserByID

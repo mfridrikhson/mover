@@ -2,15 +2,10 @@ const Router = require('@koa/router');
 const router = new Router({ prefix: '/users' });
 
 const {
-  getAllUsers,
   getUserById,
   addUser,
   updateUserByID
 } = require('../services/users.service');
-
-router.get('/', async (ctx) => {
-  ctx.body = await getAllUsers();
-});
 
 router.get('/:id', async (ctx) => {
   ctx.body = await getUserById(ctx.params.id);

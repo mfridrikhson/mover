@@ -1,10 +1,5 @@
 const knex = require('../db/connection');
 
-const getAll = () => {
-  return knex('users')
-    .select('*');
-};
-
 const getById = id => {
   return knex('users')
     .select('*')
@@ -33,7 +28,6 @@ const updateById = (id, user) => {
 };
 
 module.exports = {
-  getAll,
   getById,
   getByEmail,
   add,
