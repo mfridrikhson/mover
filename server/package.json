@@ -11,8 +11,7 @@
     "seed": "npx knex seed:run",
     "rollback": "npx knex migrate:rollback",
     "pretest": "npx cross-env NODE_ENV=test npm run migrate:reset",
-    "test": "npx cross-env NODE_ENV=test jest --testTimeout=30000 --runInBand --detectOpenHandles --verbose --coverage && cat ./coverage/lcov.info | coveralls",
-    "coverage": "npm run pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "test": "npx cross-env NODE_ENV=test jest --testTimeout=30000 --runInBand --detectOpenHandles --verbose --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [],
   "author": "",

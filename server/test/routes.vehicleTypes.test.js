@@ -1,9 +1,10 @@
 const supertest = require('supertest');
-const server = require('../app');
-const request = supertest(server.callback());
-const knex = require('../data/db/connection');
 
-describe('routes : vehicle-types', () => {
+const server = require('../app');
+const knex = require('../data/db/connection');
+const request = supertest(server.callback());
+
+describe('routes : vehicles', () => {
   beforeAll(async () => {
     await request
       .post('/api/auth/register')
@@ -20,7 +21,7 @@ describe('routes : vehicle-types', () => {
     return knex.destroy();
   });
 
-  describe('GET /api/vehicleTypes', () => {
+  describe('GET /api/vehicle-types', () => {
     it('should return all vehicle types', async (done) => {
       const resWithToken = await request
         .post('/api/auth/login')
