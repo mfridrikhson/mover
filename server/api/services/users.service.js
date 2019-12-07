@@ -2,7 +2,6 @@ const {
   getAll,
   getById,
   add,
-  deleteById,
   updateById
 } = require('../../data/queries/users.query');
 
@@ -28,14 +27,11 @@ const addUser = async (user) => {
   return { user: createdUser };
 };
 
-const deleteUserById = (id) => deleteById(id);
-
 const updateUserByID = (id, user) => updateById(id, user);
 
 module.exports = {
   getAllUsers,
   getUserById,
   addUser,
-  deleteUserById,
   updateUserByID
 };
