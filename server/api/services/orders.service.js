@@ -5,7 +5,7 @@ const {
   updateById
 } = require('../../data/queries/orders.query');
 const { getById: getUserById } = require('../../data/queries/users.query');
-const { updateUserByID } = require('../services/users.service');
+const { updateUserById } = require('../services/users.service');
 const { getDriverById } = require('../services/drivers.service');
 
 const {
@@ -34,42 +34,32 @@ const addOrder = async (order) => {
 };
 
 const updateOrderById = async (id, order) => {
-  const updatedOrder = await getById(id);
-  await updateRating(updatedOrder);
-  return (await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)).map(order => toJson(order));
+  const updatedOrder = (await updateById(id, order.fromPoint && order.toPoint ? fromJson(order) : order)).map(order => toJson(order));
+  await updateRating(updatedOrder[0]);
+  return updatedOrder;
 };
 
-const updateRating = ({ customerId, driverId, userRating, driverRating }) => {
+const updateRating = async ({ customerId, driverId, userRating, driverRating }) => {
   if (driverRating) {
-    updateDriverRating(driverId);
+    const { userId: driverUserId } = await getDriverById(driverId);
+    await updateUserRating(driverUserId, driverId);
   }
   if (userRating) {
-    updateCustomerRating(customerId);
+    await updateUserRating(customerId);
   }
 };
 
-const updateUserRating = async (id, userIsDriver) => {
-  const idPropName = userIsDriver ? 'driverId': 'customerId';
-  const ratingPropName = userIsDriver ? 'driverRating': 'userRating';
-  const result = await getAllOrders({ [idPropName]: id });
+const updateUserRating = async (userId, driverId) => {
+  const idPropName = driverId ? 'driverId': 'customerId';
+  const ratingPropName = driverId ? 'driverRating': 'userRating';
+  const result = await getAllOrders({ [idPropName]: driverId ? driverId : userId });
   const len = result.filter(order => !!order[ratingPropName]).length;
   const sum = result
     .filter(order => !!order[ratingPropName])
     .map(order => order[ratingPropName])
     .reduce((acc, cur) => acc + cur);
 
-  await updateUserByID(id, { rating: sum / len });
-};
-
-const updateDriverRating = async (driverId) => {
-  const { userId } = await getDriverById( driverId );
-  const userIsDriver = true;
-
-  await updateUserRating(userId, userIsDriver);
-};
-
-const updateCustomerRating = async (customerId) => {
-  await updateUserRating(customerId);
+  await updateUserById(userId, { rating: sum / len });
 };
 
 module.exports = {

@@ -2,11 +2,11 @@ const Router = require('@koa/router');
 const router = new Router({ prefix: '/users' });
 
 const {
-  updateUserByID
+  updateUserById
 } = require('../services/users.service');
 
 router.put('/:id', async (ctx) => {
-  const [user] = await updateUserByID(ctx.params.id, ctx.request.body);
+  const [user] = await updateUserById(ctx.params.id, ctx.request.body);
   ctx.body = user;
 });
 
