@@ -24,10 +24,10 @@ const addUser = async (user) => {
   return { user: createdUser };
 };
 
-const updateUserByID = (id, user) => updateById(id, user);
+const updateUserById = (id, user) => updateById(id, user);
 
 module.exports = {
   getUserById,
   addUser,
-  updateUserByID
+  updateUserById
 };
