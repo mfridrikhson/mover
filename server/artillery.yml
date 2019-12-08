@@ -1,0 +1,13 @@
+config:
+  target: 'http://ec2-34-218-223-229.us-west-2.compute.amazonaws.com:3001'
+  phases:
+    - duration: 600
+      arrivalRate: 100
+      rampTo: 200
+  defaults:
+    headers:
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNmM2VkZjIyLTcyY2ItNDhjNy04MTVlLTkxYTg0ZDhhMjZlYyIsImVtYWlsIjoiZnJpZHJpaHNvbi4xNzAyQGdtYWlsLmNvbSIsImlhdCI6MTU3NTczMzMzMSwiZXhwIjoxNTc1ODE5NzMxfQ.1iYh99N6fTl5fB_7Akl1kR42hG9odjRzFTSZciCbGWA'
+scenarios:
+  - flow:
+      - get:
+          url: "/api/orders"
