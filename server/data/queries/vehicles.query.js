@@ -1,5 +1,12 @@
 const knex = require('../db/connection');
 
+const getById = id => {
+  return knex('vehicles')
+    .select('*')
+    .where({ id })
+    .first();
+};
+
 const getByDriverId = driverId => {
   return knex('vehicles')
     .select('*')
@@ -13,6 +20,7 @@ const add = vehicle => {
 };
 
 module.exports = {
+  getById,
   getByDriverId,
   add
 };

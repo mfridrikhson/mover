@@ -32,12 +32,10 @@ describe('routes : drivers', () => {
           password: 'test123456'
         });
 
-      const driver = await request
-        .get(`/api/drivers/userId/${ resWithToken.body.user.id }`)
-        .set('Authorization', `Bearer ${ resWithToken.body.token }`);
+      const driver = await knex('drivers').select('*').where({ userId: resWithToken.body.user.id }).first();
 
       request
-        .put(`/api/drivers/${ driver.body.id }`)
+        .put(`/api/drivers/${ driver.id }`)
         .set('Authorization', `Bearer ${ resWithToken.body.token }`)
         .send({
           driverLicenseUrl: 'driver.license123asd'
