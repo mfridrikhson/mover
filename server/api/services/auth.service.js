@@ -20,10 +20,7 @@ const login = async ({ id, email }) => {
 
 const register = async (user) => {
   const newUser = await addUser(user);
-  if (newUser.user) {
-    return login(newUser.user);
-  }
-  return login(newUser);
+  return login(newUser.user);
 };
 
 module.exports = {
