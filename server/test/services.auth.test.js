@@ -11,7 +11,7 @@ describe('services : auth', () => {
 
   describe('register', () => {
 
-    it('should return user-customer and token', async (done) => {
+    it('should return user-customer and token', async () => {
 
       const userData = {
         email: 'test_register@gmail.com',
@@ -26,13 +26,10 @@ describe('services : auth', () => {
       const authorizedData = await tokenHelper.verifyToken(token);
 
       expect(authorizedData.id).toEqual(user.id);
-      expect(user).toEqual(
-        expect.objectContaining(userData),
-      );
-      done();
+      expect(user).toEqual(expect.objectContaining(userData));
     });
 
-    it('should return user-driver and token', async (done) => {
+    it('should return user-driver and token', async () => {
 
       const userData = {
         email: 'test_register_d@gmail.com',
@@ -47,13 +44,12 @@ describe('services : auth', () => {
       const authorizedData = await tokenHelper.verifyToken(token);
 
       expect(authorizedData.id).toEqual(user.id);
-      expect(user).toEqual(
-        expect.objectContaining(userData),
-      );
-      done();
+      expect(user).toEqual(expect.objectContaining(userData));
     });
+  });
+  describe('login', () => {
 
-    it('should return logged in user-customer and token', async (done) => {
+    it('should return logged in user-customer and token', async () => {
 
       const userData = {
         email: 'test_login@gmail.com',
@@ -69,13 +65,10 @@ describe('services : auth', () => {
       const authorizedData = await tokenHelper.verifyToken(token);
 
       expect(authorizedData.id).toEqual(user.id);
-      expect(user).toEqual(
-        expect.objectContaining(userData),
-      );
-      done();
+      expect(user).toEqual(expect.objectContaining(userData));
     });
 
-    it('should return logged in user-driver and token', async (done) => {
+    it('should return logged in user-driver and token', async () => {
 
       const userData = {
         email: 'test_login_d@gmail.com',
@@ -91,10 +84,7 @@ describe('services : auth', () => {
       const authorizedData = await tokenHelper.verifyToken(token);
 
       expect(authorizedData.id).toEqual(user.id);
-      expect(user).toEqual(
-        expect.objectContaining(userData),
-      );
-      done();
+      expect(user).toEqual(expect.objectContaining(userData));
     });
   });
 });
