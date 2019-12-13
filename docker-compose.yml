@@ -1,0 +1,45 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    expose:
+      - ${PORT}
+    environment:
+      - PORT=${PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - IMGUR_ID=${IMGUR_ID}
+      - IMGUR_SECRET=${IMGUR_SECRET}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./server/src:/mover/server/src
+    links:
+      - postgres
+    command: npm start
+
+  client:
+    build: ./client
+    expose:
+      - '3000'
+    environment:
+       - REACT_APP_MAPBOX_ACCESS_TOKEN=${REACT_APP_MAPBOX_ACCESS_TOKEN}
+       - REACT_APP_GOOGLE_MAPS_TOKEN=${REACT_APP_GOOGLE_MAPS_TOKEN}
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client/src:/mover/client/src
+      - ./client/public:/mover/client/public
+    links:
+      - server
+    command: npm start
+
+  postgres:
+    image: postgres:11.6-alpine
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - '5432:5432'
