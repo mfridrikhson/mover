@@ -3,14 +3,14 @@ services:
   server:
     build: ./server
     expose:
-      - ${PORT}
+      - "${PORT}"
     environment:
       - PORT=${PORT}
       - SECRET_KEY=${SECRET_KEY}
       - IMGUR_ID=${IMGUR_ID}
       - IMGUR_SECRET=${IMGUR_SECRET}
     ports:
-      - ${PORT}:${PORT}
+      - "${PORT}:${PORT}"
     volumes:
       - ./server/src:/mover/server/src
     links:
@@ -20,12 +20,12 @@ services:
   client:
     build: ./client
     expose:
-      - '3000'
+      - "3000"
     environment:
        - REACT_APP_MAPBOX_ACCESS_TOKEN=${REACT_APP_MAPBOX_ACCESS_TOKEN}
        - REACT_APP_GOOGLE_MAPS_TOKEN=${REACT_APP_GOOGLE_MAPS_TOKEN}
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
       - ./client/src:/mover/client/src
       - ./client/public:/mover/client/public

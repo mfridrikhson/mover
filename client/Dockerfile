@@ -1,7 +1,10 @@
-FROM node:10.17-alpine
+FROM node:10.15.3
 
-RUN mkdir -p /mover/server
-WORKDIR /mover/server
+RUN mkdir -p /mover/client
+
+COPY ./ /mover/client
+
+WORKDIR /mover/client
 
 RUN npm install
 
