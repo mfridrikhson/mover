@@ -1,5 +1,14 @@
 version: '3'
 services:
+  client:
+    build: ./client
+    environment:
+      - REACT_APP_MAPBOX_ACCESS_TOKEN=${REACT_APP_MAPBOX_ACCESS_TOKEN}
+      - REACT_APP_GOOGLE_MAPS_TOKEN=${REACT_APP_GOOGLE_MAPS_TOKEN}
+    volumes:
+      - built-client:/mover/client/build
+    command: echo 'built'
+
   server:
     build: ./server
     expose:
@@ -12,34 +21,22 @@ services:
     ports:
       - "${PORT}:${PORT}"
     volumes:
+      - built-client:/mover/client/build
       - ./server/src:/mover/server/src
-    links:
+    depends_on:
+      - client
       - postgres
-    command: npm start
-
-  client:
-    build: ./client
-    expose:
-      - "3000"
-    environment:
-       - REACT_APP_MAPBOX_ACCESS_TOKEN=${REACT_APP_MAPBOX_ACCESS_TOKEN}
-       - REACT_APP_GOOGLE_MAPS_TOKEN=${REACT_APP_GOOGLE_MAPS_TOKEN}
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./client/src:/mover/client/src
-      - ./client/public:/mover/client/public
-    links:
-      - server
-    command: npm start
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; npm run migrate && npm run seed && npm start'
 
   postgres:
-    image: postgres:11.6-alpine
+    image: postgres:11
     expose:
       - 5432
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-    ports:
-      - '5432:5432'
+    volumes:
+      - ./scripts/install-pgcrypto.sh:/docker-entrypoint-initdb.d/install-pgcrypto.sh
+volumes:
+  built-client:

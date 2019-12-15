@@ -6,8 +6,9 @@ COPY ./ /mover/server
 
 WORKDIR /mover/server
 
-RUN npm install
+RUN npm install -g pm2 && npm install
+RUN npm rebuild
 
 EXPOSE $PORT
 
-CMD ["npm", "start"]
+CMD ["pm2", "start", "server.js", "--name", "Mover"]

@@ -7,5 +7,6 @@ COPY ./ /mover/client
 WORKDIR /mover/client
 
 RUN npm install
+RUN npm run build
 
 CMD ["npm", "start"]
