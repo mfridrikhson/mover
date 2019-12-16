@@ -19,7 +19,7 @@ const getDriverByUserId = async (userId) => {
 
   if (driver.currentVehicleId) {
     currentVehicle = await getVehicleById(driver.currentVehicleId);
-    vehicleType = await getVehicleTypeById(currentVehicle.vehicleTypeId).type;
+    vehicleType = (await getVehicleTypeById(currentVehicle.vehicleTypeId)).type;
   }
   return {
     ...driver,

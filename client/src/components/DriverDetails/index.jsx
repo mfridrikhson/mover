@@ -18,6 +18,7 @@ const validationSchema = yup.object().shape({
 });
 
 const DriverDetails = ({
+  currentVehicleId,
   vehicles,
   loading,
   vehicleTypes,
@@ -38,8 +39,14 @@ const DriverDetails = ({
               placeholder="Choose your current vehicle"
               selection
               fluid
-              onChange={onChangeVehicle}
-              options={vehicles && vehicles.map(({ id, type }) => ({ key: id, text: type, value: id }))}
+              value={currentVehicleId}
+              onChange={(event, data) => onChangeVehicle(data.value)}
+              options={vehicles && vehicles.map(({ id, name, registrationPlate }) => ({
+                key: id,
+                text: name,
+                value: id,
+                description: registrationPlate
+              }))}
             />
           </Grid.Column>
           <Grid.Column>
@@ -171,9 +178,11 @@ const DriverDetails = ({
 };
 
 DriverDetails.propTypes = {
+  currentVehicleId: PropTypes.string,
   vehicles: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    registrationPlate: PropTypes.string.isRequired
   })),
   vehicleTypes: PropTypes.arrayOf(PropTypes.exact({
     id: PropTypes.string.isRequired,

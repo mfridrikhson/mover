@@ -87,7 +87,7 @@ class AvailableOrdersList extends React.Component {
                     ))}
                   </div>
                 )
-                : <div className={styles.noOrders}>No orders available currently :(</div>
+                : <div className={styles.message}>No orders available currently :(</div>
             }
           </>
         );
@@ -144,9 +144,13 @@ class AvailableOrdersList extends React.Component {
   };
 
   render() {
+    const { driver: { currentVehicle } } = this.props;
+
     return (
       <div className={styles.orderListContainer}>
-        {this.getOrderProcessStepComponent()}
+        {currentVehicle
+          ? this.getOrderProcessStepComponent()
+          : <div className={styles.message}>Select your <b>current vehicle</b> to start receiving order</div>}
       </div>
     );
   }
@@ -167,7 +171,7 @@ AvailableOrdersList.propTypes = {
       photoUrl: PropTypes.string.isRequired,
       techPassportUrl: PropTypes.string.isRequired,
       vehicleType: PropTypes.string.isRequired
-    }).isRequired
+    })
   }).isRequired,
   acceptOrder: PropTypes.func.isRequired,
   setSocket: PropTypes.func.isRequired

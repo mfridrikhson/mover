@@ -1,4 +1,4 @@
-import { takeEvery, put, call, all } from 'redux-saga/effects';
+import { takeEvery, put, call, select, all } from 'redux-saga/effects';
 import * as authService from '../../services/authService';
 import * as userService from '../../services/userService';
 import * as driverService from '../../services/driverService';
@@ -58,7 +58,11 @@ function* updateUserRequest({ payload }) {
 
 function* updateDriverRequest({ payload }) {
   try {
-    const user = yield call(driverService.updateDriver, payload);
+    let user = yield call(driverService.updateDriver, payload);
+    if (payload.currentVehicleId) {
+      const allVehicles = yield select(({ profile: { driver: { vehicles } } }) => vehicles);
+      user = { ...user, currentVehicle: allVehicles.find(({ id }) => id === payload.currentVehicleId) };
+    }
 
     yield put(updateDriver.success(user));
   } catch (error) {

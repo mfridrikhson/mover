@@ -29,7 +29,8 @@
     }
   }
 
-  :local(.noOrders) {
+  :local(.message) {
+    max-width: 400px;
     font-size: 125%;
     text-align: center;
     padding: 2em 5em;

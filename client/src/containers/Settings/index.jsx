@@ -63,11 +63,11 @@ class Settings extends React.Component {
           return (
             <Tab.Pane>
               <DriverDetails
-                driver={driver}
                 loading={loading}
-                vehicles={[]}
+                currentVehicleId={driver.currentVehicleId}
+                vehicles={driver.vehicles}
                 vehicleTypes={vehicleTypes}
-                onChangeVehicle={(data) => console.log(data)}
+                onChangeVehicle={(vehicleId) => updateDriver({ id: driver.id, currentVehicleId: vehicleId })}
                 onLoadLicense={updateDriver}
                 onAddVehicle={(data) => addVehicle({ ...data, driverId: driver.id })}
               />
@@ -94,7 +94,12 @@ Settings.propTypes = {
     id: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     currentVehicleId: PropTypes.string,
-    driverLicenceUrl: PropTypes.string
+    driverLicenceUrl: PropTypes.string,
+    vehicles: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      registrationPlate: PropTypes.string.isRequired
+    }))
   }),
   loading: PropTypes.bool.isRequired,
   updateUserRequest: PropTypes.func.isRequired,
