@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { Redirect } from 'react-router-dom';
-import { Button, Form } from 'semantic-ui-react';
+import { Link, Redirect } from 'react-router-dom';
+import { Button, Divider, Form } from 'semantic-ui-react';
 
 import CenteringContainer from '../../components/CenteringContainer';
 
@@ -62,6 +62,8 @@ const LoginPage = ({ isAuthorized, login }) => {
               </Form>
             )}
           </Formik>
+          <Divider/>
+          <p>Want to join? <Link to="/register">Sign Up</Link></p>
         </div>
       </CenteringContainer>
     )
