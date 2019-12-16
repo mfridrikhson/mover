@@ -19,16 +19,14 @@ const orderProcessSteps = {
   finished: 2
 };
 
-const initialState = {
-  orders: null,
-  orderStep: orderProcessSteps.selecting
-};
-
 class AvailableOrdersList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
+    this.state = {
+      orders: null,
+      orderStep: orderProcessSteps.selecting
+    };
   }
 
   componentDidMount() {
@@ -123,7 +121,7 @@ class AvailableOrdersList extends React.Component {
 
   onSubmitRating = async (event, { rating }) => {
     await updateOrder({ id: this.state.currentOrder.id, userRating: rating });
-    this.setState(initialState);
+    this.setState({ orderStep: orderProcessSteps.selecting });
   };
 
   onAcceptOrder = orderId => {

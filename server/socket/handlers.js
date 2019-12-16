@@ -23,6 +23,11 @@ const addRoomManagement = socket => {
 };
 
 const addDriverHandlers = socket => {
+  socket.on('getAllOrders', async () => {
+    const pendingOrders = await getAllOrders({ status: 'Pending' });
+    socket.emit('allOrders', { orders: pendingOrders });
+  });
+
   socket.on('acceptOrder', async ({ orderId, driver }) => {
     socket.to(orderId).emit('orderAccepted', driver);
     await updateOrderById(orderId, { status: 'Accepted', driverId: driver.driverId });
