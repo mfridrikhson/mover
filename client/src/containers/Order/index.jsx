@@ -12,7 +12,7 @@ import DriverInfo from '../../components/DriverInfo';
 import RatingForm from '../../components/RatingForm';
 import { submitOrder } from '../../routines';
 import { getVehicleTypes } from '../../services/vehicleTypeService';
-import { setUserRating } from '../../services/userService';
+import { updateOrder } from '../../services/orderService';
 import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
@@ -33,8 +33,6 @@ const orderProcessSteps = {
 const initialState = {
   formStep: orderFormSteps.cargoParams,
   processStep: null,
-  /*formStep: null,
-  processStep: orderProcessSteps.inProcess,*/
   volumeWeight: '',
   cargoType: '',
   vehicleTypeId: '',
@@ -171,7 +169,7 @@ class Order extends React.Component {
   }
 
   onSubmitRating = async (event, { rating }) => {
-    await setUserRating({ userId: this.state.driver.user.id, rating });
+    await updateOrder({ id: this.props.order.id, driverRating: rating });
     this.setState(initialState);
   };
 

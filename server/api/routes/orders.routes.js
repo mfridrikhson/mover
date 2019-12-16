@@ -2,7 +2,8 @@ const Router = require('@koa/router');
 const router = new Router({ prefix: '/orders' });
 
 const {
-  addOrder
+  addOrder,
+  updateOrderById
 } = require('../services/orders.service');
 
 router.post('/', async (ctx) => {
@@ -13,6 +14,10 @@ router.post('/', async (ctx) => {
     ...order,
     customer: ctx.user
   });
+});
+
+router.put('/:id', async (ctx) => {
+  ctx.body = await updateOrderById(ctx.params.id, ctx.request.body);
 });
 
 module.exports = router;

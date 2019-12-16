@@ -8,12 +8,3 @@ export const updateUser = async ({ id, ...requestData }) => {
   });
   return response.json();
 };
-
-export const setUserRating = async ({ userId, rating }) => {
-  const response = await callWebApi({
-    endpoint: `/api/users/${userId}/rating`,
-    type: 'POST',
-    requestData: { rating }
-  });
-  return response.json();
-};

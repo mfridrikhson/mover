@@ -26,7 +26,6 @@ const Moving = ({ isDriver, order }) => {
       socket.emit('newRoutePoint', { orderId: order.id, lat, lng });
       if (Math.abs(deliverLat - lat) < 0.01 && Math.abs(deliverLng - lng) < 0.01) {
         socket.emit('orderFinished', { orderId: order.id });
-        socket.close();
       }
     }
   };

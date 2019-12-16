@@ -59,7 +59,7 @@ const updateUserRating = async (userId, driverId) => {
     .map(order => order[ratingPropName])
     .reduce((acc, cur) => acc + cur);
 
-  await updateUserById(userId, { rating: sum / len });
+  await updateUserById(userId, { rating: (sum / len).toFixed(1) });
 };
 
 module.exports = {

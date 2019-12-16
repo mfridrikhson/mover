@@ -11,7 +11,7 @@ import { submitOrder } from '../../routines';
 
 import styles from './styles.module.scss';
 import RatingForm from '../../components/RatingForm';
-import { setUserRating } from '../../services/userService';
+import { updateOrder } from '../../services/orderService';
 
 const orderProcessSteps = {
   selecting: 0,
@@ -46,6 +46,7 @@ class AvailableOrdersList extends React.Component {
 
     this.socket.on('orderFinished', async () => {
       this.setState({ orderStep: orderProcessSteps.finished });
+      this.socket.emit('getAllOrders');
     });
   }
 
@@ -121,7 +122,7 @@ class AvailableOrdersList extends React.Component {
   }
 
   onSubmitRating = async (event, { rating }) => {
-    await setUserRating({ userId: this.state.currentOrder.customer.id, rating });
+    await updateOrder({ id: this.state.currentOrder.id, userRating: rating });
     this.setState(initialState);
   };
 
@@ -131,7 +132,8 @@ class AvailableOrdersList extends React.Component {
       orderId,
       driver: {
         ...this.props.driver,
-        ...this.props.user
+        ...this.props.user,
+        driverId: this.props.driver.id
       }
     });
 
@@ -163,6 +165,7 @@ AvailableOrdersList.propTypes = {
     rating: PropTypes.number
   }).isRequired,
   driver: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     currentVehicle: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,

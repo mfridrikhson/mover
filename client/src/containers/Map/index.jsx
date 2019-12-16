@@ -41,50 +41,50 @@ class Map extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.departPoint && nextProps.departPoint) {
-      navigator.geolocation.getCurrentPosition(({ coords: { latitude: lat, longitude: lng } }) => {
-        this.setState({ myPoint: { lat, lng } }, () => {
-          if (this.props.isDriver) {
-            const intervalId = setInterval(() => {
-              let newLat, newLng, goalReached;
-              const { lat, lng } = this.state.myPoint;
-              const { lat: goalLat, lng: goalLng } = this.state.departPointReached
-                ? this.props.deliverPoint
-                : this.props.departPoint;
+      const lat = 50.45;
+      const lng = 30.52;
+      this.setState({ myPoint: { lat, lng } }, () => {
+        if (this.props.isDriver) {
+          const intervalId = setInterval(() => {
+            let newLat, newLng, goalReached;
+            const { lat, lng } = this.state.myPoint;
+            const { lat: goalLat, lng: goalLng } = this.state.departPointReached
+              ? this.props.deliverPoint
+              : this.props.departPoint;
 
-              if (goalLat > lat) {
-                newLat = lat + 0.01;
-              } else {
-                newLat = lat - 0.01;
-              }
-              if (goalLng > lng) {
-                newLng = lng + 0.01;
-              } else {
-                newLng = lng - 0.01;
-              }
+            if (goalLat > lat) {
+              newLat = lat + 0.01;
+            } else {
+              newLat = lat - 0.01;
+            }
+            if (goalLng > lng) {
+              newLng = lng + 0.01;
+            } else {
+              newLng = lng - 0.01;
+            }
 
-              if (Math.abs(goalLat - lat) < 0.01 && Math.abs(goalLng - lng) < 0.01) {
-                goalReached = true;
-              }
+            if (Math.abs(goalLat - lat) < 0.01 && Math.abs(goalLng - lng) < 0.01) {
+              goalReached = true;
+            }
 
-              this.setState({
-                myPoint: {
-                  lat: newLat,
-                  lng: newLng,
-                },
-                ...(goalReached
-                  ? this.state.departPointReached
-                    ? { deliverPointReached: true }
-                    : { departPointReached: true }
-                  : {})
-              }, () => {
-                this.props.onPositionChange(this.state.myPoint);
-                if (this.state.deliverPointReached) {
-                  clearInterval(intervalId);
-                }
-              });
-            }, 500);
-          }
-        });
+            this.setState({
+              myPoint: {
+                lat: newLat,
+                lng: newLng,
+              },
+              ...(goalReached
+                ? this.state.departPointReached
+                  ? { deliverPointReached: true }
+                  : { departPointReached: true }
+                : {})
+            }, () => {
+              this.props.onPositionChange(this.state.myPoint);
+              if (this.state.deliverPointReached) {
+                clearInterval(intervalId);
+              }
+            });
+          }, 500);
+        }
       });
     }
   }
