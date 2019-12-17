@@ -54,9 +54,7 @@ describe('routes : vehicles', () => {
         .expect(200)
         .end((err, res) => {
           expect(err).toBeNull();
-          expect(res.body).toEqual(expect.arrayContaining(
-            [expect.objectContaining(expectedData)]
-          ));
+          expect(res.body).toEqual(expect.objectContaining(expectedData));
           done();
         });
     });
