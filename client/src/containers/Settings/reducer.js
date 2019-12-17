@@ -49,7 +49,7 @@ export const profile = (state = initialState, action) => {
         ...state,
         driver: {
           ...state.driver,
-          vehicles: [...state.vehicles, action.payload]
+          vehicles: [...state.driver.vehicles, action.payload]
         }
       };
     case updateDriver.FAILURE:
